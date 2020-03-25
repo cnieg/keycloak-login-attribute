@@ -30,9 +30,11 @@ giving the copy it a reasonable name,
 maybe "Browser with Attribute".
 
 Then replace the "Username Password Form" execution by the new "Attribute Username Password Form" execution.
+
 ![Browser Flow Configuration](browser_flow_config.png "Browser Flow Configuration")
 
-Configure this new step with your attribute name and choose a regex which can restrict calls and avoid expensives searches by attribute
+Configure this new step with your attribute name and choose a regex which can restrict calls and avoid expensives searches by attribute.
+
 ![Authenticator Configuration](authenticator_config.png "Authenticator Configuration")
 
 Having done so you have to select your copy of the browser in the bindings tab for the browser flow.
