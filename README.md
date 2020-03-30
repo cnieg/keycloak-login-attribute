@@ -1,3 +1,4 @@
+![Java CI with Maven](https://github.com/cnieg/keycloak-login-attribute/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![License](https://img.shields.io/:license-Apache2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 # Keycloak Login Attribute SPI
