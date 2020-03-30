@@ -7,7 +7,7 @@
 
     <groupId>fr.cnieg.keycloak</groupId>
     <artifactId>attribute-login-provider</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
