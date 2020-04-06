@@ -4,6 +4,7 @@
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Adds the possibility for Keycloak to connect via a user attribute</description>
     <modelVersion>4.0.0</modelVersion>
+    <url>https://github.com/cnieg/keycloak-login-attribute</url>
 
     <groupId>fr.cnieg.keycloak</groupId>
     <artifactId>attribute-login-provider</artifactId>
@@ -134,7 +135,7 @@
     <scm>
         <connection>scm:git:git://github.com/cnieg/keycloak-login-attribute.git</connection>
         <developerConnection>scm:git:ssh://github.com:cnieg/keycloak-login-attribute.git</developerConnection>
-        <url>https://github.com/cnieg/keycloak-login-attribute</url>
+        <url>${project.url}</url>
     </scm>
 
     <distributionManagement>
