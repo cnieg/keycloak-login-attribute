@@ -135,7 +135,7 @@
     <scm>
         <connection>scm:git:git://github.com/cnieg/keycloak-login-attribute.git</connection>
         <developerConnection>scm:git:ssh://github.com:cnieg/keycloak-login-attribute.git</developerConnection>
-        <url>${project.url}</url>
+        <url>https://github.com/cnieg/keycloak-login-attribute</url>
     </scm>
 
     <distributionManagement>
