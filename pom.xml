@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <name>${project.groupId}:${project.artifactId}</name>
+    <name>fr.cnieg.keycloak:keycloak-login-attribute</name>
     <description>Adds the possibility for Keycloak to connect via a user attribute</description>
     <modelVersion>4.0.0</modelVersion>
     <url>https://github.com/cnieg/keycloak-login-attribute</url>
 
     <groupId>fr.cnieg.keycloak</groupId>
     <artifactId>attribute-login-provider</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
