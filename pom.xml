@@ -13,7 +13,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <keycloak.version>9.0.2</keycloak.version>
+        <keycloak.version>10.0.2</keycloak.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
