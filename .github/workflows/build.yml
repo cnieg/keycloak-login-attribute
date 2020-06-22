@@ -16,7 +16,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 11.O.3
+          java-version: 11.0.3
           architecture: x64
 
       - name: Cache local Maven repository
