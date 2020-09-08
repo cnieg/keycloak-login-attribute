@@ -40,7 +40,27 @@ Configure this new step with your attribute name and choose a regex which can re
 
 Having done so you have to select your copy of the browser in the bindings tab for the browser flow.
 
-That's all.
+# Keycloak Reset Credential Attribute
+
+Like the Keycloak Login Attribute SPI, AttributeChooseUser adds the possibility for [Keycloak](https://www.keycloak.org) to reset credentials via a user attribute.
+
+## Configuration
+
+Make sure that you have correctly configured an attribute for your users which can be used as an identifier alternative.
+
+Switch to your realm in the keycloak administration console. 
+
+Switch to the "Authentication" configuration and copy the original reset credential flow, giving the copy it a reasonable name, maybe "Reset Credential with Attribute".
+
+Then replace the "Choose User" execution by the new "Attribute Choose User" execution.
+
+![Browser Flow Configuration](reset_credentials_flow_config.png "Reset Credentials Flow Configuration")
+
+Configure this new step with your attribute name and choose a regex which can restrict calls and avoid expensives searches by attribute.
+
+![Authenticator Configuration](authenticator_config.png "Authenticator Configuration")
+
+Having done so you have to select your copy of the browser in the bindings tab for the browser flow.
 
 ## License
 
