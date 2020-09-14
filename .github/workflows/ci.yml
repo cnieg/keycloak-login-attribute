@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: '12.16.2'
       - name: Install Dependencies
-        run: npm i semantic-release maven-semantic-release
+        run: npm i -g semantic-release maven-semantic-release
       - name: Run Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
