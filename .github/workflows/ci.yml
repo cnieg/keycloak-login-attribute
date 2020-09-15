@@ -39,4 +39,4 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.gpg_passphrase }}
           OSSRH_JIRA_USERNAME: ${{ secrets.nexus_username }}
           OSSRH_JIRA_PASSWORD: ${{ secrets.nexus_password }}
-        run: npx semantic-release --debug --dry-run --skip-pr-check --no-ci --branches *
+        run: npx semantic-release --debug --dry-run --no-ci
