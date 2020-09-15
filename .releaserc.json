@@ -5,8 +5,9 @@
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
-    "@conveyal/maven-semantic-release",
     "@semantic-release/github",
+    "@conveyal/maven-semantic-release",
     "@semantic-release/changelog"
-  ]
+  ],
+  "disable-snapshot-skip-ci": "true"
 }
