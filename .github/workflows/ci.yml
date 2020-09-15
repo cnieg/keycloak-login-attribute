@@ -43,10 +43,8 @@ jobs:
           npx semantic-release
           --debug
           --dry-run
-          --no-ci
           --plugins "@semantic-release/commit-analyzer"
           --plugins "@semantic-release/release-notes-generator"
           --plugins "@semantic-release/github"
           --plugins "@conveyal/maven-semantic-release"
           --plugins "@semantic-release/changelog"
-          --branches "semantic"
