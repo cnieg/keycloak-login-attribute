@@ -49,3 +49,4 @@ jobs:
           --plugins "@semantic-release/github"
           --plugins "@conveyal/maven-semantic-release"
           --plugins "@semantic-release/changelog"
+          --branches ".*"
