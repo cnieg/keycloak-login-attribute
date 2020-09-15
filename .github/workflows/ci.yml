@@ -44,8 +44,8 @@ jobs:
           --debug
           --dry-run
           --no-ci
-          --plugins ["@semantic-release/commit-analyzer",
-                    "@semantic-release/release-notes-generator",
-                    "@semantic-release/github",
-                    "@conveyal/maven-semantic-release",
-                    "@semantic-release/changelog"]
+          --plugins "@semantic-release/commit-analyzer"
+                    "@semantic-release/release-notes-generator"
+                    "@semantic-release/github"
+                    "@conveyal/maven-semantic-release"
+                    "@semantic-release/changelog"
