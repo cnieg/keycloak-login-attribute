@@ -35,7 +35,7 @@ jobs:
       - name: Run Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GPG_KEY_NAME: ${{ secrets.GPG_PRIVATE KEY }}
+          GPG_KEY_NAME: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           OSSRH_JIRA_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           OSSRH_JIRA_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
