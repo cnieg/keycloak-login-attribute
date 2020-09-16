@@ -32,6 +32,19 @@ jobs:
           node-version: '12.16.2'
       - name: Install Dependencies
         run: npm i @semantic-release/changelog @conveyal/maven-semantic-release -D
+      - name: Export GPG
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GPG_KEY_NAME: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          OSSRH_JIRA_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          OSSRH_JIRA_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        run: | 
+          echo $GITHUB_TOKEN
+          echo $GPG_KEY_NAME
+          echo $GPG_PASSPHRASE
+          echo $OSSRH_JIRA_USERNAME
+          echo $OSSRH_JIRA_PASSWORD
       - name: Run Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
