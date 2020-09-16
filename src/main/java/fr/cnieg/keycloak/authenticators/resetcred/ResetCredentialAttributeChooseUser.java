@@ -39,26 +39,18 @@ public class ResetCredentialAttributeChooseUser extends ResetCredentialChooseUse
             username = username.trim();
             RealmModel realm = context.getRealm();
 
-            System.out.println("ResetCredentialChooseUserWithAttributes - Username : " + username);
-
             // Get user by username
             UserModel user = context.getSession().users().getUserByUsername(username, realm);
-
-            if(user != null) { System.out.println("Get user by username : " + user.getUsername()); }
 
             // Get user by email
             if (user == null && realm.isLoginWithEmailAllowed() && username.contains("@")) {
                 user = context.getSession().users().getUserByEmail(username, realm);
             }
 
-            if(user != null) { System.out.println("Get user by email : " + user.getUsername()); }
-
             // Get user by attribute
             if (user == null) {
                 user = this.getUserByAttribute(context, username);
             }
-
-            if(user != null) { System.out.println("Get user by attribute : " + user.getUsername()); }
 
             context.getAuthenticationSession().setAuthNote("ATTEMPTED_USERNAME", username);
 
