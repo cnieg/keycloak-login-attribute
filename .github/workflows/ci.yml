@@ -41,9 +41,9 @@ jobs:
           OSSRH_JIRA_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: >
           npx semantic-release
-          --debug
           --plugins "@semantic-release/commit-analyzer"
           --plugins "@semantic-release/release-notes-generator"
           --plugins "@semantic-release/github"
           --plugins "@conveyal/maven-semantic-release"
           --plugins "@semantic-release/changelog"
+          --dry-run ${{ github.ref != 'master' }}
