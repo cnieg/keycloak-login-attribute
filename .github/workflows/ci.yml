@@ -47,3 +47,4 @@ jobs:
           --plugins "@conveyal/maven-semantic-release"
           --plugins "@semantic-release/changelog"
           --dry-run ${{ github.ref != 'master' }}
+          --branches ${{ github.ref }}
