@@ -35,15 +35,15 @@ jobs:
       - name: Run Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GPG_KEY_NAME: ${{ secrets.gpg_private_key }}
-          GPG_PASSPHRASE: ${{ secrets.gpg_passphrase }}
-          OSSRH_JIRA_USERNAME: ${{ secrets.nexus_username }}
-          OSSRH_JIRA_PASSWORD: ${{ secrets.nexus_password }}
+          GPG_KEY_NAME: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          OSSRH_JIRA_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          OSSRH_JIRA_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: >
           npx semantic-release
           --debug
           --plugins "@semantic-release/commit-analyzer"
           --plugins "@semantic-release/release-notes-generator"
-          --plugins "@conveyal/maven-semantic-release"
           --plugins "@semantic-release/github"
+          --plugins "@conveyal/maven-semantic-release"
           --plugins "@semantic-release/changelog"
