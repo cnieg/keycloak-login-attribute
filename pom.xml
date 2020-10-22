@@ -8,7 +8,7 @@
 
     <groupId>fr.cnieg.keycloak</groupId>
     <artifactId>attribute-login-provider</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -128,8 +128,8 @@
 
     <developers>
         <developer>
-            <name>Dominique Arnou</name>
-            <email>dominique.arnou@cnieg.fr</email>
+            <name>CNIEG</name>
+            <email>maintainers@cnieg.fr</email>
             <organization>CNIEG</organization>
             <organizationUrl>https://www.cnieg.fr</organizationUrl>
         </developer>
