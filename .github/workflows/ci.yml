@@ -36,15 +36,15 @@ jobs:
           properties: |
             [
               {"skipNexusStagingDeployMojo": "false"},
-              {"gpg.passphrase": "${{ secrets.gpg_passphrase }}"},
+              {"gpg.passphrase": "${{ secrets.GPG_PASSPHRASE }}"},
               {"altSnapshotDeploymentRepository": "snapshots::default::https://oss.sonatype.org/content/repositories/snapshots"},
               {"altReleaseDeploymentRepository": "releases::default::https://oss.sonatype.org/service/local/staging/deploy/maven2"}
             ]
           servers: |
             [{
                 "id": "ossrh",
-                "username": "${{ secrets.OSSRH_JIRA_USERNAME }}",
-                "password": "${{ secrets.OSSRH_JIRA_PASSWORD }}"
+                "username": "${{ secrets.NEXUS_USERNAME }}",
+                "password": "${{ secrets.NEXUS_PASSWORD }}"
             }]
       - name: Semantic Prerelease
         if: env.GITHUB_BRANCH != 'main'
