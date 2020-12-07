@@ -1,49 +1,73 @@
 name: CI
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+
+on: push
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Get branch name
+        run: |
+          echo "GITHUB_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+      - name: Display branch name
+        run: |
+          echo "Branche : ${{ env.GITHUB_BRANCH }}"
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Cache Maven packages
+      - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-      - name: Setup Node.js
-        uses: actions/setup-node@v2.1.2
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Import GPG and Prepare build
+        run: export GPG_TTY=$(tty) && echo -e "$GPG_PRIVATE_KEY" | gpg --batch --import && chmod +x mvnw
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.gpg_private_key }}
+      - name: Prepare Maven Settings
+        uses: s4u/maven-settings-action@v2.2.0
         with:
-          node-version: '12.16.2'
-      - name: Install Dependencies
-        run: npm i @semantic-release/changelog @conveyal/maven-semantic-release -D
-      - name: Run Semantic Release
+          githubServer: false
+          properties: |
+            [
+              {"skipNexusStagingDeployMojo": "false"},
+              {"gpg.passphrase": "${{ secrets.GPG_PASSPHRASE }}"},
+              {"altSnapshotDeploymentRepository": "snapshots::default::https://oss.sonatype.org/content/repositories/snapshots"},
+              {"altReleaseDeploymentRepository": "releases::default::https://oss.sonatype.org/service/local/staging/deploy/maven2"}
+            ]
+          servers: |
+            [{
+                "id": "ossrh",
+                "username": "${{ secrets.NEXUS_USERNAME }}",
+                "password": "${{ secrets.NEXUS_PASSWORD }}"
+            }]
+      - name: Semantic Prerelease
+        if: env.GITHUB_BRANCH != 'main'
+        uses: cycjimmy/semantic-release-action@v2
+        with:
+          semantic_version: 17.2.2
+          branches: ${{ env.GITHUB_BRANCH }}
+          extra_plugins: |
+            @semantic-release/changelog@5.0.1
+            @semantic-release/git@9.0.0
+            @semantic-release/exec@5.0.0
+          dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GPG_KEY_NAME: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          OSSRH_JIRA_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          OSSRH_JIRA_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-        run: >
-          npx semantic-release
-          --debug
-          --plugins "@semantic-release/commit-analyzer"
-          --plugins "@semantic-release/release-notes-generator"
-          --plugins "@semantic-release/github"
-          --plugins "@conveyal/maven-semantic-release"
-          --plugins "@semantic-release/changelog"
+      - name: Semantic Release
+        if: env.GITHUB_BRANCH == 'main'
+        uses: cycjimmy/semantic-release-action@v2
+        with:
+          semantic_version: 17.2.2
+          branches: main
+          extra_plugins: |
+            @semantic-release/changelog@5.0.1
+            @semantic-release/git@9.0.0
+            @semantic-release/exec@5.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
