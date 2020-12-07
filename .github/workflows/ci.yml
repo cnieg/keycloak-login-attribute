@@ -3,7 +3,7 @@ name: CI
 on: push
 
 env:
-  mainBranchName: 'master'
+  mainBranchName: master
 
 jobs:
   build:
@@ -50,7 +50,7 @@ jobs:
                 "password": "${{ secrets.NEXUS_PASSWORD }}"
             }]
       - name: Semantic Prerelease
-        if: env.GITHUB_BRANCH != '${{ env.mainBranchName }}'
+        if: env.GITHUB_BRANCH != env.mainBranchName
         uses: cycjimmy/semantic-release-action@v2
         with:
           semantic_version: 17.2.2
@@ -63,7 +63,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Semantic Release
-        if: env.GITHUB_BRANCH == '${{ env.mainBranchName }}'
+        if: env.GITHUB_BRANCH == env.mainBranchName
         uses: cycjimmy/semantic-release-action@v2
         with:
           semantic_version: 17.2.2
