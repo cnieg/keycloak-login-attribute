@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.1...v1.2.2) (2020-12-08)
+
+
+### Bug Fixes
+
+* rollback checkout with new token, while triggering other workflows ([f9c57ce](https://github.com/cnieg/keycloak-login-attribute/commit/f9c57ced6fcc3324b1f3840438d5e38802037707))
+
 ## [1.2.1](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.0...v1.2.1) (2020-12-08)
 
 
