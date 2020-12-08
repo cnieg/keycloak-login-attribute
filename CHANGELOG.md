@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.0...v1.2.1) (2020-12-08)
+
+
+### Bug Fixes
+
+* add badge ([112283e](https://github.com/cnieg/keycloak-login-attribute/commit/112283ea9e8861558dfdcf11e569ad752a15afab))
+
 # [1.2.0](https://github.com/cnieg/keycloak-login-attribute/compare/v1.1.2...v1.2.0) (2020-12-08)
 
 
