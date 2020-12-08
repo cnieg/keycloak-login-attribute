@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.SEMANTIC_TOKEN }}
+          persist-credentials: false
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
