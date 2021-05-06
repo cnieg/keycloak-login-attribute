@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.5...v1.2.6) (2021-05-06)
+
+
+### Bug Fixes
+
+* **deps:** bump flatten-maven-plugin from 1.2.5 to 1.2.7 ([#38](https://github.com/cnieg/keycloak-login-attribute/issues/38)) ([70777d3](https://github.com/cnieg/keycloak-login-attribute/commit/70777d3a352205ec907606afec1808b86a0b9a00))
+
 ## [1.2.5](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.4...v1.2.5) (2021-02-08)
 
 
