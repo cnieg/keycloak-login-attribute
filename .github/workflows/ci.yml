@@ -30,6 +30,11 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+      - id: install-secret-key
+        name: Install gpg secret key
+        run: |
+          cat <(echo -e "${{ secrets.gpg_private_key }}") | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
       - name: Import GPG and Prepare build
         run: export GPG_TTY=$(tty) && echo -e "$GPG_PRIVATE_KEY" | gpg --batch --import && chmod +x mvnw
         env:
