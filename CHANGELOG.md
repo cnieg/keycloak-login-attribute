@@ -1,3 +1,10 @@
+## [1.2.9](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.8...v1.2.9) (2021-09-13)
+
+
+### Bug Fixes
+
+* **deps:** bump maven-enforcer-plugin from 3.0.0-M3 to 3.0.0 ([#53](https://github.com/cnieg/keycloak-login-attribute/issues/53)) ([762d8ee](https://github.com/cnieg/keycloak-login-attribute/commit/762d8eea67ede053454a8ea80754b5a7179b08f4))
+
 ## [1.2.8](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.7...v1.2.8) (2021-09-13)
 
 
