@@ -36,7 +36,7 @@ jobs:
         env:
           GPG_PRIVATE_KEY: ${{ secrets.gpg_private_key }}
       - name: Prepare Maven Settings
-        uses: s4u/maven-settings-action@v2.3.0
+        uses: s4u/maven-settings-action@v2.4.1
         with:
           githubServer: false
           properties: |
