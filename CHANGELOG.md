@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.7...v1.2.8) (2021-09-13)
+
+
+### Bug Fixes
+
+* **deps:** bump actions/cache from 2.1.4 to 2.1.6 ([#50](https://github.com/cnieg/keycloak-login-attribute/issues/50)) ([8803c5c](https://github.com/cnieg/keycloak-login-attribute/commit/8803c5cdc55fce0a4f576d08366614269575ba18))
+
 ## [1.2.7](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.6...v1.2.7) (2021-09-13)
 
 
