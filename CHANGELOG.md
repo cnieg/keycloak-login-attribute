@@ -1,3 +1,10 @@
+## [1.2.10](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.9...v1.2.10) (2021-09-13)
+
+
+### Bug Fixes
+
+* **deps:** bump actions/setup-java from 1 to 2.3.0 ([#58](https://github.com/cnieg/keycloak-login-attribute/issues/58)) ([389a0fb](https://github.com/cnieg/keycloak-login-attribute/commit/389a0fb23122491610ae92638774ed90bc51e7c5))
+
 ## [1.2.9](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.8...v1.2.9) (2021-09-13)
 
 
