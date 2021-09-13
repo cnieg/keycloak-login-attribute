@@ -1,3 +1,10 @@
+## [1.2.12](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.11...v1.2.12) (2021-09-13)
+
+
+### Bug Fixes
+
+* **deps:** bump s4u/maven-settings-action from 2.3.0 to 2.4.1 ([#56](https://github.com/cnieg/keycloak-login-attribute/issues/56)) ([8cba467](https://github.com/cnieg/keycloak-login-attribute/commit/8cba4678fcdc5736e9d0e7417086184dc2662e34))
+
 ## [1.2.11](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.10...v1.2.11) (2021-09-13)
 
 
