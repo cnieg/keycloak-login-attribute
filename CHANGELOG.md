@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.6...v1.2.7) (2021-09-13)
+
+
+### Bug Fixes
+
+* **deps:** bump maven-javadoc-plugin from 3.2.0 to 3.3.1 ([#59](https://github.com/cnieg/keycloak-login-attribute/issues/59)) ([0ca1072](https://github.com/cnieg/keycloak-login-attribute/commit/0ca10725fd9f0783cb76daadbc9becc9306dd83f))
+
 ## [1.2.6](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.5...v1.2.6) (2021-05-06)
 
 
