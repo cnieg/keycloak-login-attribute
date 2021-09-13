@@ -1,3 +1,10 @@
+## [1.2.11](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.10...v1.2.11) (2021-09-13)
+
+
+### Bug Fixes
+
+* **deps:** bump maven-gpg-plugin from 1.6 to 3.0.1 ([#42](https://github.com/cnieg/keycloak-login-attribute/issues/42)) ([8ef6c91](https://github.com/cnieg/keycloak-login-attribute/commit/8ef6c91094213f71eace34251b63bef9411129f7))
+
 ## [1.2.10](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.9...v1.2.10) (2021-09-13)
 
 
