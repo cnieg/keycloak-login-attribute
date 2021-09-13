@@ -23,6 +23,7 @@ jobs:
         uses: actions/setup-java@v2.3.0
         with:
           java-version: 11
+          distribution: temurin
       - name: Cache local Maven repository
         uses: actions/cache@v2.1.6
         with:
