@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'de.gliderpilot.semantic-release' version '1.4.2'
-    id 'maven-publish'
+    //id 'de.gliderpilot.semantic-release' version '1.4.2'
+    //id 'maven-publish'
 }
 
 group = "fr.cnieg.keycloak"
@@ -30,9 +30,7 @@ test {
 }
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
-    }
+    toolchain { languageVersion = JavaLanguageVersion.of(11) }
 }
 /*
 java {
