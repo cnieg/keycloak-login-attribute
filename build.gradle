@@ -6,12 +6,14 @@ plugins {
 
 group = "fr.cnieg.keycloak"
 
+/*
 def setExtValue(String property, String systemenv) {
     project.ext."$property" = project.hasProperty(property) ? project.getProperty(property) : System.getenv(systemenv)
 }
 
 setExtValue('ghToken', 'GH_TOKEN')
 
+*/
 
 repositories {
     mavenCentral()
@@ -21,10 +23,18 @@ dependencies {
     compileOnly 'org.keycloak:keycloak-server-spi:16.0.0'
     compileOnly 'org.keycloak:keycloak-server-spi-private:16.0.0'
     compileOnly 'org.keycloak:keycloak-services:16.0.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_11
+tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 
+/*
 java {
     withSourcesJar()
     withJavadocJar()
@@ -38,10 +48,6 @@ publishing {
     }
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
 release {
 }
 
@@ -53,3 +59,4 @@ semanticRelease {
         releaseAsset javadocJar, label: 'the javadoc of the project', contentType: 'application/zip'
     }
 }
+*/
