@@ -1,9 +1,12 @@
   name: Java CI
 
   on:
+    workflow_dispatch:
+
     push:
-    pull_request:
-      branches: [master]
+      paths-ignore:
+        - 'README.md'
+        - 'CHANGELOG.md'
 
   jobs:
     build:
