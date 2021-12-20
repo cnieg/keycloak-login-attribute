@@ -32,6 +32,12 @@ test {
 java {
     toolchain { languageVersion = JavaLanguageVersion.of(11) }
 }
+
+buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+}
+
 /*
 java {
     withSourcesJar()
