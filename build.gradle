@@ -48,7 +48,7 @@ release {
 semanticRelease {
     repo {
         ghToken = project.ext.ghToken
-        releaseAsset jar, contentType: 'application/zip'
+        //releaseAsset jar, contentType: 'application/zip'
         releaseAsset sourcesJar, label: 'the sources of the project', contentType: 'application/zip'
         releaseAsset javadocJar, label: 'the javadoc of the project', contentType: 'application/zip'
     }
