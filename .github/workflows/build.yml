@@ -20,6 +20,7 @@
           with:
             java-version: '17'
             distribution: 'adopt'
-            cache: gradle
         - name: Build with Gradle
-          run: ./gradlew build
+          uses: gradle/gradle-build-action@v2.0.1
+          with:
+            arguments: build --info --stacktrace
