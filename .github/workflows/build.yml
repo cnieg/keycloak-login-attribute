@@ -25,4 +25,4 @@
         - name: Build with Gradle
           uses: gradle/gradle-build-action@v2.0.1
           with:
-            arguments: build --info --stacktrace
+            arguments: build
