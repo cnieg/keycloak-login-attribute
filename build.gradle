@@ -8,8 +8,6 @@ plugins {
 
 group = "fr.cnieg.keycloak"
 
-project.ext.sonatypeUsername = project.findProperty('sonatypeUsername')
-project.ext.sonatypePassword = project.findProperty('sonatypePassword')
 project.ext.ghToken = project.hasProperty('ghToken') ? project.getProperty('ghToken') : System.getenv('GH_TOKEN') ?: null
 
 publishing {
@@ -91,7 +89,10 @@ project.plugins.withType(MavenPublishPlugin).all {
 
 nexusPublishing {
     repositories {
-        sonatype()
+        sonatype{
+            username=project.findProperty('sonatypeUsername')
+            password=project.findProperty('sonatypePassword')
+        }
     }
     connectTimeout = Duration.ofMinutes(3)
     clientTimeout = Duration.ofMinutes(3)
