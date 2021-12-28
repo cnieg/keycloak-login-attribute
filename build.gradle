@@ -8,6 +8,10 @@ plugins {
 
 group = "fr.cnieg.keycloak"
 
+project.ext.sonatypeUsername = project.findProperty('sonatypeUsername')
+project.ext.sonatypePassword = project.findProperty('sonatypePassword')
+project.ext.ghToken = project.hasProperty('ghToken') ? project.getProperty('ghToken') : System.getenv('GH_TOKEN') ?: null
+
 publishing {
     publications {
         maven(MavenPublication) {
@@ -85,8 +89,6 @@ project.plugins.withType(MavenPublishPlugin).all {
     }
 }
 
-project.ext.sonatypeUsername = project.hasProperty('sonatypeUsername') ? project.getProperty('sonatypeUsername') : System.getenv('NEXUS_USERNAME') ?: null
-project.ext.sonatypePassword = project.hasProperty('sonatypePassword') ? project.getProperty('sonatypePassword') : System.getenv('NEXUS_PASSWORD') ?: null
 nexusPublishing {
     repositories {
         sonatype()
@@ -95,7 +97,6 @@ nexusPublishing {
     clientTimeout = Duration.ofMinutes(3)
 }
 
-project.ext.ghToken = project.hasProperty('ghToken') ? project.getProperty('ghToken') : System.getenv('GH_TOKEN') ?: null
 semanticRelease {
     repo {
         ghToken = project.ghToken
