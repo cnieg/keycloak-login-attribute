@@ -89,10 +89,7 @@ project.plugins.withType(MavenPublishPlugin).all {
 
 nexusPublishing {
     repositories {
-        sonatype{
-            username=project.findProperty('sonatypeUsername')
-            password=project.findProperty('sonatypePassword')
-        }
+        sonatype()
     }
     connectTimeout = Duration.ofMinutes(3)
     clientTimeout = Duration.ofMinutes(3)
