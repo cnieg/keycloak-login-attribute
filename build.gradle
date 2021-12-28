@@ -85,6 +85,8 @@ project.plugins.withType(MavenPublishPlugin).all {
     }
 }
 
+project.ext.sonatypeUsername = project.hasProperty('sonatypeUsername') ? project.getProperty('sonatypeUsername') : System.getenv('NEXUS_USERNAME') ?: null
+project.ext.sonatypePassword = project.hasProperty('sonatypePassword') ? project.getProperty('sonatypePassword') : System.getenv('NEXUS_PASSWORD') ?: null
 nexusPublishing {
     repositories {
         sonatype()
