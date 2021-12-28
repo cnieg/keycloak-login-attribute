@@ -26,3 +26,6 @@
           uses: gradle/gradle-build-action@v2.0.1
           with:
             arguments: release
+          env:
+            ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.NEXUS_USERNAME }}
+            ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.NEXUS_PASSWORD }}
