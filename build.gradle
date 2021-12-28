@@ -93,9 +93,10 @@ nexusPublishing {
     clientTimeout = Duration.ofMinutes(3)
 }
 
+project.ext.ghToken = project.hasProperty('ghToken') ? project.getProperty('ghToken') : System.getenv('GH_TOKEN') ?: null
 semanticRelease {
     repo {
-        ghToken = project.hasProperty('ghToken') ? project.getProperty('ghToken') : System.getenv('GH_TOKEN') ?: null
+        ghToken = project.ghToken
         releaseAsset jar
         releaseAsset sourcesJar
         releaseAsset javadocJar
