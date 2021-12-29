@@ -25,7 +25,7 @@
         - name: Build with Gradle
           uses: gradle/gradle-build-action@v2.0.1
           with:
-            arguments: release
+            arguments: release --stacktrace --info
           env:
             ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.NEXUS_USERNAME }}
             ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.NEXUS_PASSWORD }}
