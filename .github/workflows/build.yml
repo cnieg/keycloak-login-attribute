@@ -32,4 +32,4 @@
             GH_TOKEN: ${{ secrets.GH_TOKEN }}
             ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.SIGNING_KEYID }}
             ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
-            ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD" }}
+            ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
