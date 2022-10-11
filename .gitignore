@@ -24,3 +24,5 @@ hs_err_pid*
 /attribute-login-provider.iml
 /target/
 .idea/
+/.flattened-pom.xml
+/.gradle/

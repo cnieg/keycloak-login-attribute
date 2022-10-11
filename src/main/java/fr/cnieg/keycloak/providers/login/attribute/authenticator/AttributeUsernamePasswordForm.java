@@ -4,6 +4,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.Authenticator;
@@ -20,6 +21,7 @@ import org.keycloak.services.managers.AuthenticationManager;
 import org.keycloak.services.messages.Messages;
 
 public class AttributeUsernamePasswordForm extends UsernamePasswordForm implements Authenticator {
+    protected static final Logger logger = Logger.getLogger(AttributeUsernamePasswordForm.class);
     public static final String ATTRIBUTE_KEY = "login.attribute.key";
     public static final String ATTRIBUTE_REGEX = "login.attribute.regex";
 
@@ -27,12 +29,11 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
         AuthenticatorConfigModel authenticatorConfigModel = context.getAuthenticatorConfig();
 
         if (authenticatorConfigModel != null && authenticatorConfigModel.getConfig() != null && authenticatorConfigModel.getConfig().get(
-            ATTRIBUTE_KEY) != null && authenticatorConfigModel.getConfig().get(ATTRIBUTE_REGEX) != null) {
+                ATTRIBUTE_KEY) != null && authenticatorConfigModel.getConfig().get(ATTRIBUTE_REGEX) != null) {
             String attributeKey = authenticatorConfigModel.getConfig().get(ATTRIBUTE_KEY);
             String attributeRegex = authenticatorConfigModel.getConfig().get(ATTRIBUTE_REGEX);
             if (userName.matches(attributeRegex)) {
-                List<UserModel> result = context.getSession().userStorageManager().searchForUserByUserAttribute(attributeKey, userName,
-                    context.getRealm());
+                List<UserModel> result = context.getSession().users().searchForUserByUserAttributeStream(context.getRealm(), attributeKey, userName).toList();
                 if (result.size() == 1) {
                     return result.get(0);
                 }
@@ -43,15 +44,15 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
 
     @Override
     public boolean validateUserAndPassword(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
-        System.out.println("validateUserAndPassword()");
+        logger.debug("validateUserAndPassword()");
         context.clearUser();
         UserModel user = getUserOrAttribute(context, inputData);
-        return user != null && validatePassword(context, user, inputData) && validateUser(context, user, inputData);
+        return user != null && validatePassword(context, user, inputData, true) && validateUser(context, user, inputData);
     }
 
     @Override
     public boolean validateUser(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
-        System.out.println("validateUserAndPassword()");
+        logger.debug("validateUserAndPassword()");
         context.clearUser();
         UserModel user = getUserOrAttribute(context, inputData);
         return user != null && validateUser(context, user, inputData);
