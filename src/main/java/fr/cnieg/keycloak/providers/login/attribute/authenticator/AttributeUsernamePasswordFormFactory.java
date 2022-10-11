@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.keycloak.Config;
-import org.keycloak.OAuth2Constants;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
-import org.keycloak.authentication.DisplayTypeAuthenticatorFactory;
-import org.keycloak.authentication.authenticators.console.ConsoleUsernamePasswordAuthenticator;
 import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.credential.PasswordCredentialModel;
 import org.keycloak.provider.ProviderConfigProperty;
 
-public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactory, DisplayTypeAuthenticatorFactory {
+public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactory {
 
     public static final String PROVIDER_ID = "attribute-username-password-form";
     public static final AttributeUsernamePasswordForm SINGLETON = new AttributeUsernamePasswordForm();
@@ -26,29 +23,18 @@ public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactor
     }
 
     @Override
-    public Authenticator createDisplay(KeycloakSession session, String displayType) {
-        if (displayType == null) {
-            return SINGLETON;
-        }
-        if (!OAuth2Constants.DISPLAY_CONSOLE.equalsIgnoreCase(displayType)) {
-            return null;
-        }
-        return ConsoleUsernamePasswordAuthenticator.SINGLETON;
-    }
-
-    @Override
     public void init(Config.Scope config) {
-
+        // unused method
     }
 
     @Override
     public void postInit(KeycloakSessionFactory factory) {
-
+        // unused method
     }
 
     @Override
     public void close() {
-
+        // unused method
     }
 
     @Override
@@ -66,7 +52,7 @@ public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactor
         return true;
     }
 
-    public static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = { AuthenticationExecutionModel.Requirement.REQUIRED };
+    protected static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = { AuthenticationExecutionModel.Requirement.REQUIRED };
 
     @Override
     public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
