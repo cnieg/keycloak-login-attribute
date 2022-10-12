@@ -4,6 +4,10 @@ on: push
 
 env:
   mainBranchName: master
+  semanticReleaseVersion: 19.0.5
+  semanticChangelogVersion: 6.0.1
+  semanticGitVersion: 10.0.1
+  semanticExecVersion: 6.0.3
 
 jobs:
   build:
@@ -54,26 +58,26 @@ jobs:
             }]
       - name: Semantic Prerelease
         if: env.GITHUB_BRANCH != env.mainBranchName
-        uses: cycjimmy/semantic-release-action@v2
+        uses: cycjimmy/semantic-release-action@v3
         with:
-          semantic_version: 17.2.2
+          semantic_version: ${{ env.semanticReleaseVersion }}
           branches: ${{ env.GITHUB_BRANCH }}
           extra_plugins: |
-            @semantic-release/changelog@5.0.1
-            @semantic-release/git@9.0.0
-            @semantic-release/exec@5.0.0
+            @semantic-release/changelog@${{ env.semanticChangelogVersion }}
+            @semantic-release/git@{{ env.semanticGitVersion }}
+            @semantic-release/exec@{{ env.semanticExecVersion }}
           dry_run: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CR_TOKEN }}
       - name: Semantic Release
         if: env.GITHUB_BRANCH == env.mainBranchName
-        uses: cycjimmy/semantic-release-action@v2
+        uses: cycjimmy/semantic-release-action@v3
         with:
-          semantic_version: 17.2.2
+          semantic_version: ${{ env.semanticReleaseVersion }}
           branches: ${{ env.mainBranchName }}
           extra_plugins: |
-            @semantic-release/changelog@5.0.1
-            @semantic-release/git@9.0.0
-            @semantic-release/exec@5.0.0
+            @semantic-release/changelog@${{ env.semanticChangelogVersion }}
+            @semantic-release/git@{{ env.semanticGitVersion }}
+            @semantic-release/exec@{{ env.semanticExecVersion }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CR_TOKEN }}
