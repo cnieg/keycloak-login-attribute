@@ -1,3 +1,16 @@
+# [1.3.0](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.15...v1.3.0) (2022-10-12)
+
+
+### Bug Fixes
+
+* **deps:** update keycloak.version to v15.1.1 ([#128](https://github.com/cnieg/keycloak-login-attribute/issues/128)) ([f6a8af4](https://github.com/cnieg/keycloak-login-attribute/commit/f6a8af456ea55149cfcc2120e164dffb0c35b9f1))
+
+
+### Features
+
+* bump semantic versionning ([#132](https://github.com/cnieg/keycloak-login-attribute/issues/132)) ([37d2af5](https://github.com/cnieg/keycloak-login-attribute/commit/37d2af568e5276ccceb751c540797d568518e741))
+* **deps:** update keycloak.version to v19 (major) ([#129](https://github.com/cnieg/keycloak-login-attribute/issues/129)) ([23b0c4c](https://github.com/cnieg/keycloak-login-attribute/commit/23b0c4c83af78773aeec2a0bd704e4a3f2852dd6))
+
 ## [1.2.15](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.14...v1.2.15) (2021-11-29)
 
 
