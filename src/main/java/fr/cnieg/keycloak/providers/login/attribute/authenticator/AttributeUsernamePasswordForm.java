@@ -1,9 +1,5 @@
 package fr.cnieg.keycloak.providers.login.attribute.authenticator;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import java.util.List;
-
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
@@ -12,7 +8,6 @@ import org.keycloak.authentication.authenticators.browser.AbstractUsernameFormAu
 import org.keycloak.authentication.authenticators.browser.UsernamePasswordForm;
 import org.keycloak.events.Details;
 import org.keycloak.events.Errors;
-import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.ModelDuplicateException;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.utils.KeycloakModelUtils;
@@ -20,26 +15,18 @@ import org.keycloak.services.ServicesLogger;
 import org.keycloak.services.managers.AuthenticationManager;
 import org.keycloak.services.messages.Messages;
 
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+
+import static fr.cnieg.keycloak.AuthenticatorUserModel.getUserModel;
+
 public class AttributeUsernamePasswordForm extends UsernamePasswordForm implements Authenticator {
     protected static final Logger logger = Logger.getLogger(AttributeUsernamePasswordForm.class);
     public static final String ATTRIBUTE_KEY = "login.attribute.key";
     public static final String ATTRIBUTE_REGEX = "login.attribute.regex";
 
     private UserModel getUserByAttribute(AuthenticationFlowContext context, String userName) {
-        AuthenticatorConfigModel authenticatorConfigModel = context.getAuthenticatorConfig();
-
-        if (authenticatorConfigModel != null && authenticatorConfigModel.getConfig() != null && authenticatorConfigModel.getConfig().get(
-                ATTRIBUTE_KEY) != null && authenticatorConfigModel.getConfig().get(ATTRIBUTE_REGEX) != null) {
-            String attributeKey = authenticatorConfigModel.getConfig().get(ATTRIBUTE_KEY);
-            String attributeRegex = authenticatorConfigModel.getConfig().get(ATTRIBUTE_REGEX);
-            if (userName.matches(attributeRegex)) {
-                List<UserModel> result = context.getSession().users().searchForUserByUserAttributeStream(context.getRealm(), attributeKey, userName).toList();
-                if (result.size() == 1) {
-                    return result.get(0);
-                }
-            }
-        }
-        return null;
+        return getUserModel(context, userName, ATTRIBUTE_KEY, ATTRIBUTE_REGEX);
     }
 
     @Override
