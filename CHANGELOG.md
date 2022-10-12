@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/cnieg/keycloak-login-attribute/compare/v1.3.0...v1.3.1) (2022-10-12)
+
+
+### Bug Fixes
+
+* restore java 11 and fix deprecated methods ([#133](https://github.com/cnieg/keycloak-login-attribute/issues/133)) ([0461a0f](https://github.com/cnieg/keycloak-login-attribute/commit/0461a0f21dc82591c61eb2eb0e53ec817f9aded2))
+
 # [1.3.0](https://github.com/cnieg/keycloak-login-attribute/compare/v1.2.15...v1.3.0) (2022-10-12)
 
 
