@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/cnieg/keycloak-login-attribute/compare/v1.3.3...v1.3.4) (2023-08-09)
+
+
+### Bug Fixes
+
+* **deps:** update keycloak.version to v21 (major) ([#146](https://github.com/cnieg/keycloak-login-attribute/issues/146)) ([aed2f89](https://github.com/cnieg/keycloak-login-attribute/commit/aed2f891e865958b3d1f020f95eb58e8454e9059))
+
 ## [1.3.3](https://github.com/cnieg/keycloak-login-attribute/compare/v1.3.2...v1.3.3) (2023-08-08)
 
 
