@@ -12,63 +12,109 @@ import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.credential.PasswordCredentialModel;
 import org.keycloak.provider.ProviderConfigProperty;
 
+/**
+ * Form factory for Attribute Username Password
+ */
 public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactory {
 
+    /**
+     * Provider Id
+     */
     public static final String PROVIDER_ID = "attribute-username-password-form";
+    /**
+     * Singleton instance
+     */
     public static final AttributeUsernamePasswordForm SINGLETON = new AttributeUsernamePasswordForm();
 
+    /**
+     * @param session keycloak user session
+     * @return authenticator
+     */
     @Override
     public Authenticator create(KeycloakSession session) {
         return SINGLETON;
     }
 
+    /**
+     * @param config configuration provider
+     */
     @Override
     public void init(Config.Scope config) {
         // unused method
     }
 
+    /**
+     * @param factory noop
+     */
     @Override
     public void postInit(KeycloakSessionFactory factory) {
         // unused method
     }
 
+    /**
+     * noop
+     */
     @Override
     public void close() {
         // unused method
     }
 
+    /**
+     * @return provider id
+     */
     @Override
     public String getId() {
         return PROVIDER_ID;
     }
 
+    /**
+     * @return Model Type
+     */
     @Override
     public String getReferenceCategory() {
         return PasswordCredentialModel.TYPE;
     }
 
+    /**
+     * @return configurable provider
+     */
     @Override
     public boolean isConfigurable() {
         return true;
     }
 
+    /**
+     * Choices are required
+     */
     protected static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = { AuthenticationExecutionModel.Requirement.REQUIRED };
 
+    /**
+     * @return requirements
+     */
     @Override
     public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
         return REQUIREMENT_CHOICES;
     }
 
+    /**
+     * @return no user setup allowed
+     */
     @Override
     public boolean isUserSetupAllowed() {
         return false;
     }
 
+    /**
+     * @return Form display
+     */
     @Override
     public String getDisplayType() {
         return "Attribute Username Password Form";
     }
 
+    /**
+     * @return Help Text
+     */
     @Override
     public String getHelpText() {
         return "Validates a username or attribute and password from login form";

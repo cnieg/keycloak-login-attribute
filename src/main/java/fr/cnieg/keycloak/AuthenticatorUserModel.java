@@ -5,14 +5,23 @@ import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.UserModel;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+/**
+ * Authenticator User Model
+ */
 public class AuthenticatorUserModel {
 
     private AuthenticatorUserModel() {
         throw new IllegalStateException("Utility class");
     }
 
+    /**
+     * @param context Keycloak context
+     * @param userName User chosen
+     * @param attributeKey2 Attribute for identify user
+     * @param attributeRegex2 Attribute Format
+     * @return User Model
+     */
     public static UserModel getUserModel(AuthenticationFlowContext context, String userName, String attributeKey2, String attributeRegex2) {
         AuthenticatorConfigModel authenticatorConfigModel = context.getAuthenticatorConfig();
 
@@ -23,7 +32,7 @@ public class AuthenticatorUserModel {
             if (userName.matches(attributeRegex)) {
                 List<UserModel> result = context.getSession().users()
                         .searchForUserByUserAttributeStream(context.getRealm(), attributeKey, userName)
-                        .collect(Collectors.toList());
+                        .toList();
                 if (result.size() == 1) {
                     return result.get(0);
                 }

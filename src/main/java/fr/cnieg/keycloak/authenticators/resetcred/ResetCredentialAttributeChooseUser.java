@@ -11,23 +11,44 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.provider.ProviderConfigProperty;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
 import static fr.cnieg.keycloak.AuthenticatorUserModel.getUserModel;
 
+/**
+ *
+ */
 public class ResetCredentialAttributeChooseUser extends ResetCredentialChooseUser implements Authenticator, AuthenticatorFactory {
+    /**
+     *
+     */
     public static final String PROVIDER_ID = "reset-credentials-attr-choose-user";
+    /**
+     *
+     */
     public static final String ATTRIBUTE_KEY = "login.attribute.key";
+    /**
+     *
+     */
     public static final String ATTRIBUTE_REGEX = "login.attribute.regex";
+    /**
+     *
+     */
     public static final String ATTRIBUTE_USERNAME = "username";
 
+    /**
+     * noop
+     */
     public ResetCredentialAttributeChooseUser() {
         // noop
     }
 
+    /**
+     * @param context Keycloak context
+     */
     @Override
     public void action(AuthenticationFlowContext context) {
 
@@ -76,16 +97,25 @@ public class ResetCredentialAttributeChooseUser extends ResetCredentialChooseUse
         return getUserModel(context, userName, ATTRIBUTE_KEY, ATTRIBUTE_REGEX);
     }
 
+    /**
+     * @return display type
+     */
     @Override
     public String getDisplayType() {
         return "Attribute Choose User";
     }
 
+    /**
+     * @return configurable provider
+     */
     @Override
     public boolean isConfigurable() {
         return true;
     }
 
+    /**
+     * @return provider id
+     */
     @Override
     public String getId() {
         return PROVIDER_ID;
@@ -109,6 +139,9 @@ public class ResetCredentialAttributeChooseUser extends ResetCredentialChooseUse
         CONFIG_PROPERTIES.add(providerConfigProperty);
     }
 
+    /**
+     * @return provider configuration
+     */
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
         return CONFIG_PROPERTIES;
