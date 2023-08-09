@@ -15,20 +15,37 @@ import org.keycloak.services.ServicesLogger;
 import org.keycloak.services.managers.AuthenticationManager;
 import org.keycloak.services.messages.Messages;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 
 import static fr.cnieg.keycloak.AuthenticatorUserModel.getUserModel;
 
+/**
+ * Attribute username password form
+ */
 public class AttributeUsernamePasswordForm extends UsernamePasswordForm implements Authenticator {
+    /**
+     * Logger used by class
+     */
     protected static final Logger logger = Logger.getLogger(AttributeUsernamePasswordForm.class);
+    /**
+     * Attribute key used for check identity
+     */
     public static final String ATTRIBUTE_KEY = "login.attribute.key";
+    /**
+     * Attribute format
+     */
     public static final String ATTRIBUTE_REGEX = "login.attribute.regex";
 
     private UserModel getUserByAttribute(AuthenticationFlowContext context, String userName) {
         return getUserModel(context, userName, ATTRIBUTE_KEY, ATTRIBUTE_REGEX);
     }
 
+    /**
+     * @param context Authentication Flow context
+     * @param inputData User inputs
+     * @return password checked
+     */
     @Override
     public boolean validateUserAndPassword(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
         logger.debug("validateUserAndPassword()");
@@ -37,6 +54,11 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
         return user != null && validatePassword(context, user, inputData, true) && validateUser(context, user, inputData);
     }
 
+    /**
+     * @param context Authentication Flow context
+     * @param inputData User inputs
+     * @return password checked
+     */
     @Override
     public boolean validateUser(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
         logger.debug("validateUserAndPassword()");
