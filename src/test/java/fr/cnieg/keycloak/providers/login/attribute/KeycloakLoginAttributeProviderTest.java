@@ -5,9 +5,10 @@ import org.junit.jupiter.api.Test;
 
 class KeycloakLoginAttributeProviderTest {
     @Test
-    public void shouldStartKeycloakWithExtensionClassFolder() {
+    void shouldStartKeycloakWithExtensionClassFolder() {
         try (KeycloakContainer keycloak = new KeycloakContainer()
-                .withProviderClassesFrom("target/classes")) {
+                .withProviderClassesFrom("target/classes")
+                .withRealmImportFile("/login-attribute-realm.json")) {
             keycloak.start();
         }
     }
