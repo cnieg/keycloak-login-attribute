@@ -27,7 +27,7 @@
         <compiler-maven-plugin.version>3.11.0</compiler-maven-plugin.version>
         <testcontainers-keycloak.version>3.0.0</testcontainers-keycloak.version>
         <rest-assured.version>5.3.1</rest-assured.version>
-        <slf4j-simple.version>2.0.7</slf4j-simple.version>
+        <slf4j-simple.version>2.0.9</slf4j-simple.version>
         <playwright.version>1.37.0</playwright.version>
         <testcontainers.version>1.19.0</testcontainers.version>
     </properties>
