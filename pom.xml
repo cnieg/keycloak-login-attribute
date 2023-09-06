@@ -13,7 +13,7 @@
 
     <properties>
         <revision>0.0.0-SNAPSHOT</revision>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <keycloak.version>22.0.1</keycloak.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -25,6 +25,11 @@
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
         <compiler-maven-plugin.version>3.11.0</compiler-maven-plugin.version>
+        <testcontainers-keycloak.version>3.0.0</testcontainers-keycloak.version>
+        <rest-assured.version>5.3.1</rest-assured.version>
+        <slf4j-simple.version>2.0.7</slf4j-simple.version>
+        <playwright.version>1.37.0</playwright.version>
+        <testcontainers.version>1.19.0</testcontainers.version>
     </properties>
 
     <dependencies>
@@ -45,6 +50,42 @@
             <artifactId>keycloak-services</artifactId>
             <version>${keycloak.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dasniko</groupId>
+            <artifactId>testcontainers-keycloak</artifactId>
+            <version>${testcontainers-keycloak.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${rest-assured.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j-simple.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+            <version>${playwright.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
