@@ -18,8 +18,8 @@ class KeycloakLoginAttributeProviderTest {
     private static final KeycloakContainer KEYCLOAK_CONTAINER = new KeycloakContainer()
             .withProviderClassesFrom("target/classes")
             .withRealmImportFile("/login-attribute-realm.json");
-    static Playwright playwright;
-    static Browser browser;
+    private static Playwright playwright;
+    private static Browser browser;
     BrowserContext context;
     Page page;
 
@@ -46,60 +46,95 @@ class KeycloakLoginAttributeProviderTest {
     }
 
     @Test
-    void shouldIdentifyJaneWithLoginName() {
+    void test_should_identify_jane_with_Login_name() {
+        // Given
+        String username = "janedoe";
+        String password = "s3cr3t";
+        String expected = "Jane Doe";
+        // When
         page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
-        page.getByLabel("Username").fill("janedoe");
-        page.getByLabel("Password").fill("s3cr3t");
+        page.getByLabel("Username").fill(username);
+        page.getByLabel("Password").fill(password);
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
-        assertThat(page.locator("#landingLoggedInUser")).hasText("Anonymous");
+        // Then
+        assertThat(page.locator("#landingLoggedInUser")).hasText(expected);
     }
 
     @Test
-    void shouldIdentifyJohnWithAttribute() {
+    void test_should_identify_john_with_attribute() {
+        // Given
+        String attributeValueOfJohnDoe = "SHOULDBEOKFORLOGIN";
+        String password = "s3cr3t";
+        String expected = "John Doe";
+        // When
         page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
-        page.getByLabel("Username").fill("SHOULDBEOKFORLOGIN");
-        page.getByLabel("Password").fill("s3cr3t");
+        page.getByLabel("Username").fill(attributeValueOfJohnDoe);
+        page.getByLabel("Password").fill(password);
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
-        assertThat(page.locator("#landingLoggedInUser")).hasText("Anonymous");
-    }
-    @Test
-    void shouldNotIdentifyJaneWithAttribute() {
-        page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
-        page.getByLabel("Username").fill("SHOULDBEkoFORLOGIN");
-        page.getByLabel("Password").fill("s3cr3t");
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
-        assertThat(page.getByText("Invalid username or password.")).isVisible();
-
-    }
-    @Test
-    void shouldResetJaneWithLoginName() {
-        page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
-        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Forgot Password?")).click();
-        page.getByLabel("Username").fill("janedoe");
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Submit")).click();
-        assertThat(page.getByText("Failed to send email, please try again later.")).isVisible();
+        // Then
+        assertThat(page.locator("#landingLoggedInUser")).hasText(expected);
     }
 
     @Test
-    void shouldResetJohnWithAttribute() {
+    void test_should_not_identify_jane_with_attribute() {
+        // Given
+        String attributeValueOfJaneDoe = "SHOULDBEkoFORLOGIN";
+        String password = "s3cr3t";
+        String expected = "Invalid username or password.";
+        // When
         page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
-        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Forgot Password?")).click();
-        page.getByLabel("Username").fill("SHOULDBEOKFORLOGIN");
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Submit")).click();
-        assertThat(page.getByText("Failed to send email, please try again later.")).isVisible();
+        page.getByLabel("Username").fill(attributeValueOfJaneDoe);
+        page.getByLabel("Password").fill(password);
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
+        // Then
+        assertThat(page.getByText(expected)).isVisible();
     }
+
     @Test
-    void shouldNotResetJaneWithAttribute() {
+    void test_should_reset_jane_with_login_name() {
+        // Given
+        String username = "janedoe";
+        String expected = "Failed to send email, please try again later.";
+        // When
         page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
         page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Forgot Password?")).click();
-        page.getByLabel("Username").fill("SHOULDBEkoFORLOGIN");
+        page.getByLabel("Username").fill(username);
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Submit")).click();
-        assertThat(page.getByText("You should receive an email shortly with further instructions.")).isVisible();
+        // Then
+        assertThat(page.getByText(expected)).isVisible();
+    }
+
+    @Test
+    void test_should_reset_john_with_attribute() {
+        // Given
+        String attributeValueOfJohnDoe = "SHOULDBEOKFORLOGIN";
+        String expected = "Failed to send email, please try again later.";
+        // When
+        page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Forgot Password?")).click();
+        page.getByLabel("Username").fill(attributeValueOfJohnDoe);
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Submit")).click();
+        // Then
+        assertThat(page.getByText(expected)).isVisible();
+    }
+
+    @Test
+    void test_should_not_reset_jane_with_attribute() {
+        // Given
+        String attributeValueOfJaneDoe = "SHOULDBEkoFORLOGIN";
+        String expected = "You should receive an email shortly with further instructions.";
+        // When
+        page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Forgot Password?")).click();
+        page.getByLabel("Username").fill(attributeValueOfJaneDoe);
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Submit")).click();
+        // Then
+        assertThat(page.getByText(expected)).isVisible();
     }
 }
