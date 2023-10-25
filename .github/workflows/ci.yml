@@ -68,7 +68,7 @@ jobs:
             @semantic-release/exec@${{ env.semanticExecVersion }}
           dry_run: true
         env:
-          GITHUB_TOKEN: ${{ secrets.CR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Semantic Release
         if: env.GITHUB_BRANCH == env.mainBranchName
         uses: cycjimmy/semantic-release-action@v3
@@ -80,4 +80,4 @@ jobs:
             @semantic-release/git@${{ env.semanticGitVersion }}
             @semantic-release/exec@${{ env.semanticExecVersion }}
         env:
-          GITHUB_TOKEN: ${{ secrets.CR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
