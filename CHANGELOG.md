@@ -1,3 +1,16 @@
+## [1.3.9](https://github.com/cnieg/keycloak-login-attribute/compare/v1.3.8...v1.3.9) (2023-10-26)
+
+
+### Bug Fixes
+
+* **deps:** update keycloak.version to v22.0.5 ([#170](https://github.com/cnieg/keycloak-login-attribute/issues/170)) ([8397e47](https://github.com/cnieg/keycloak-login-attribute/commit/8397e47db0c94079123f8e449117d6c2247083f3))
+* use specific token for git tag ([#176](https://github.com/cnieg/keycloak-login-attribute/issues/176)) ([da9c884](https://github.com/cnieg/keycloak-login-attribute/commit/da9c8849341ec1c2451737932c49e4555340b25a))
+
+
+### Reverts
+
+* Revert "chore(deps): update dependency maven to v3.9.5 (#171)" (#173) ([cf6ae1c](https://github.com/cnieg/keycloak-login-attribute/commit/cf6ae1c9f3aecb88fdbe8142c95db755a2408a3a)), closes [#171](https://github.com/cnieg/keycloak-login-attribute/issues/171) [#173](https://github.com/cnieg/keycloak-login-attribute/issues/173)
+
 ## [1.3.8](https://github.com/cnieg/keycloak-login-attribute/compare/v1.3.7...v1.3.8) (2023-09-12)
 
 
