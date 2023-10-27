@@ -1,3 +1,10 @@
+## [1.3.10](https://github.com/cnieg/keycloak-login-attribute/compare/v1.3.9...v1.3.10) (2023-10-27)
+
+
+### Bug Fixes
+
+* remove ugly badge ([#178](https://github.com/cnieg/keycloak-login-attribute/issues/178)) ([3618f5c](https://github.com/cnieg/keycloak-login-attribute/commit/3618f5c8a4bccd76dd8a8086cc0d161f04d3a6e4))
+
 ## [1.3.9](https://github.com/cnieg/keycloak-login-attribute/compare/v1.3.8...v1.3.9) (2023-10-26)
 
 
