@@ -56,6 +56,8 @@ jobs:
                 "username": "${{ secrets.NEXUS_USERNAME }}",
                 "password": "${{ secrets.NEXUS_PASSWORD }}"
             }]
+      - name: Verify Maven
+        run: ./mvnw -B -ntp verify 1>&2
       - name: Semantic Prerelease
         if: env.GITHUB_BRANCH != env.mainBranchName
         uses: cycjimmy/semantic-release-action@v3
