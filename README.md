@@ -18,9 +18,16 @@ Then the search by attribute is activated
 
 ## Installation
 
-Just drop the jar into the _deployments_ subdirectory of your Keycloak installation
-or use the jboss-cli deploy command.
+Just drop the jar into the _/opt/keycloak_ subdirectory of your Keycloak installation.
 
+For example, you can add this snippet in a Dockerfile
+
+```dockerfile
+WORKDIR /opt/keycloak
+
+# plugins
+ADD --chown=keycloak:keycloak https://repo1.maven.org/maven2/fr/cnieg/keycloak/attribute-login-provider/$PLUGIN_VERSION/attribute-login-provider-$PLUGIN_VERSION.jar providers/attribute-login-provider-$PLUGIN_VERSION.jar
+```
 ## Configuration
 
 Make sure that you have correctly configured an attribute for your users which can be used as an identifier alternative.
