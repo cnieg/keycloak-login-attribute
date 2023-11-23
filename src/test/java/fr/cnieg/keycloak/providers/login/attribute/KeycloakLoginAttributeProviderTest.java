@@ -55,7 +55,7 @@ class KeycloakLoginAttributeProviderTest {
         page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
         page.getByLabel("Username").fill(username);
-        page.getByLabel("Password").fill(password);
+        page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill(password);
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
         // Then
         assertThat(page.locator("#landingLoggedInUser")).hasText(expected);
@@ -71,7 +71,7 @@ class KeycloakLoginAttributeProviderTest {
         page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
         page.getByLabel("Username").fill(attributeValueOfJohnDoe);
-        page.getByLabel("Password").fill(password);
+        page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill(password);
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
         // Then
         assertThat(page.locator("#landingLoggedInUser")).hasText(expected);
@@ -87,7 +87,7 @@ class KeycloakLoginAttributeProviderTest {
         page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
         page.getByLabel("Username").fill(attributeValueOfJaneDoe);
-        page.getByLabel("Password").fill(password);
+        page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill(password);
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
         // Then
         assertThat(page.getByText(expected)).isVisible();
