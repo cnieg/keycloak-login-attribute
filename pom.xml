@@ -14,7 +14,7 @@
     <properties>
         <revision>0.0.0-SNAPSHOT</revision>
         <java.version>17</java.version>
-        <keycloak.version>23.0.1</keycloak.version>
+        <keycloak.version>23.0.4</keycloak.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,10 +24,10 @@
         <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-        <compiler-maven-plugin.version>3.11.0</compiler-maven-plugin.version>
+        <compiler-maven-plugin.version>3.12.0</compiler-maven-plugin.version>
         <testcontainers-keycloak.version>3.2.0</testcontainers-keycloak.version>
         <rest-assured.version>5.3.2</rest-assured.version>
-        <slf4j-simple.version>2.0.9</slf4j-simple.version>
+        <slf4j-simple.version>2.0.10</slf4j-simple.version>
         <playwright.version>1.40.0</playwright.version>
         <testcontainers.version>1.19.3</testcontainers.version>
     </properties>
