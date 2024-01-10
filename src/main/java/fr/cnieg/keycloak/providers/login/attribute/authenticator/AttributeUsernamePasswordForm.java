@@ -1,5 +1,7 @@
 package fr.cnieg.keycloak.providers.login.attribute.authenticator;
 
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
@@ -8,15 +10,13 @@ import org.keycloak.authentication.authenticators.browser.AbstractUsernameFormAu
 import org.keycloak.authentication.authenticators.browser.UsernamePasswordForm;
 import org.keycloak.events.Details;
 import org.keycloak.events.Errors;
+import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.ModelDuplicateException;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.utils.KeycloakModelUtils;
 import org.keycloak.services.ServicesLogger;
 import org.keycloak.services.managers.AuthenticationManager;
 import org.keycloak.services.messages.Messages;
-
-import jakarta.ws.rs.core.MultivaluedMap;
-import jakarta.ws.rs.core.Response;
 
 import static fr.cnieg.keycloak.AuthenticatorUserModel.getUserModel;
 
@@ -36,13 +36,17 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
      * Attribute format
      */
     public static final String ATTRIBUTE_REGEX = "login.attribute.regex";
+    /**
+     * Authorize any password
+     */
+    public static final String AUTHORIZE_ANY_PASSWORD = "authorize.any.password";
 
     private UserModel getUserByAttribute(AuthenticationFlowContext context, String userName) {
         return getUserModel(context, userName, ATTRIBUTE_KEY, ATTRIBUTE_REGEX);
     }
 
     /**
-     * @param context Authentication Flow context
+     * @param context   Authentication Flow context
      * @param inputData User inputs
      * @return password checked
      */
@@ -51,17 +55,30 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
         logger.debug("validateUserAndPassword()");
         context.clearUser();
         UserModel user = getUserOrAttribute(context, inputData);
-        return user != null && validatePassword(context, user, inputData, true) && validateUser(context, user, inputData);
+        return user != null &&
+                validateUser(context, user, inputData) &&
+                (validateAnyPassword(context) || validatePassword(context, user, inputData, true));
+    }
+
+    private boolean validateAnyPassword(AuthenticationFlowContext context) {
+        AuthenticatorConfigModel config = context.getAuthenticatorConfig();
+        if (config != null) {
+            if (Boolean.parseBoolean(config.getConfig().get(AUTHORIZE_ANY_PASSWORD))) {
+                logger.warn("Password not validated, use this configuration only for tests purpose");
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
-     * @param context Authentication Flow context
+     * @param context   Authentication Flow context
      * @param inputData User inputs
      * @return password checked
      */
     @Override
     public boolean validateUser(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
-        logger.debug("validateUserAndPassword()");
+        logger.debug("validateUser()");
         context.clearUser();
         UserModel user = getUserOrAttribute(context, inputData);
         return user != null && validateUser(context, user, inputData);

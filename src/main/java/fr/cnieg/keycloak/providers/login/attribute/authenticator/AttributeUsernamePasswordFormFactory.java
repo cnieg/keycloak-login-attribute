@@ -1,8 +1,5 @@
 package fr.cnieg.keycloak.providers.login.attribute.authenticator;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.keycloak.Config;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
@@ -11,6 +8,9 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.credential.PasswordCredentialModel;
 import org.keycloak.provider.ProviderConfigProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Form factory for Attribute Username Password
@@ -135,6 +135,13 @@ public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactor
         providerConfigProperty.setType(ProviderConfigProperty.STRING_TYPE);
         providerConfigProperty.setHelpText("Regular expression for which the search by attribute will be performed");
         providerConfigProperty.setDefaultValue(".*");
+        CONFIG_PROPERTIES.add(providerConfigProperty);
+        providerConfigProperty = new ProviderConfigProperty();
+        providerConfigProperty.setName(AttributeUsernamePasswordForm.AUTHORIZE_ANY_PASSWORD);
+        providerConfigProperty.setLabel("Authorize Any Password");
+        providerConfigProperty.setType(ProviderConfigProperty.BOOLEAN_TYPE);
+        providerConfigProperty.setHelpText("Add ability (only for tests) to accept any password");
+        providerConfigProperty.setDefaultValue(false);
         CONFIG_PROPERTIES.add(providerConfigProperty);
     }
 
