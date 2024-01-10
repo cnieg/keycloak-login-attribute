@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/cnieg/keycloak-login-attribute/compare/v1.3.14...v1.4.0) (2024-01-10)
+
+
+### Features
+
+* accept any password during tests ([#193](https://github.com/cnieg/keycloak-login-attribute/issues/193)) ([f667495](https://github.com/cnieg/keycloak-login-attribute/commit/f66749552fbd2c46c48698026ead9708f74872c1))
+
 ## [1.3.14](https://github.com/cnieg/keycloak-login-attribute/compare/v1.3.13...v1.3.14) (2024-01-08)
 
 
