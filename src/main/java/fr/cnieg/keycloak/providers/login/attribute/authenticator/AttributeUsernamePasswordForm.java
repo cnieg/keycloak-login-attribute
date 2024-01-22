@@ -19,6 +19,7 @@ import org.keycloak.services.managers.AuthenticationManager;
 import org.keycloak.services.messages.Messages;
 
 import static fr.cnieg.keycloak.AuthenticatorUserModel.getUserModel;
+import static org.keycloak.services.validation.Validation.FIELD_USERNAME;
 
 /**
  * Attribute username password form
@@ -53,11 +54,11 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
     @Override
     public boolean validateUserAndPassword(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
         logger.debug("validateUserAndPassword()");
-        context.clearUser();
         UserModel user = getUserOrAttribute(context, inputData);
+        boolean shouldClearUserFromCtxAfterBadPassword = !isUserAlreadySetBeforeUsernamePasswordAuth(context);
         return user != null &&
                 validateUser(context, user, inputData) &&
-                (validateAnyPassword(context) || validatePassword(context, user, inputData, true));
+                (validateAnyPassword(context) || validatePassword(context, user, inputData, shouldClearUserFromCtxAfterBadPassword));
     }
 
     private boolean validateAnyPassword(AuthenticationFlowContext context) {
@@ -79,7 +80,6 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
     @Override
     public boolean validateUser(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
         logger.debug("validateUser()");
-        context.clearUser();
         UserModel user = getUserOrAttribute(context, inputData);
         return user != null && validateUser(context, user, inputData);
     }
@@ -100,12 +100,11 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
         return true;
     }
 
-    private UserModel getUserOrAttribute(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
-
+    private UserModel getUserOrAttributeFromForm(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
         String userName = inputData.getFirst(AuthenticationManager.FORM_USERNAME);
         if (userName == null) {
             context.getEvent().error(Errors.USER_NOT_FOUND);
-            Response challengeResponse = challenge(context, getDefaultChallengeMessage(context));
+            Response challengeResponse = challenge(context, getDefaultChallengeMessage(context), FIELD_USERNAME);
             context.failureChallenge(AuthenticationFlowError.INVALID_USER, challengeResponse);
             return null;
         }
@@ -136,5 +135,18 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
 
         testInvalidUser(context, user);
         return user;
+    }
+
+    private UserModel getUserOrAttribute(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
+        if (isUserAlreadySetBeforeUsernamePasswordAuth(context)) {
+            // Get user from the authentication context in case he was already set before this authenticator
+            UserModel user = context.getUser();
+            testInvalidUser(context, user);
+            return user;
+        } else {
+            // Normal login. In this case this authenticator is supposed to establish identity of the user from the provided username
+            context.clearUser();
+            return getUserOrAttributeFromForm(context, inputData);
+        }
     }
 }
