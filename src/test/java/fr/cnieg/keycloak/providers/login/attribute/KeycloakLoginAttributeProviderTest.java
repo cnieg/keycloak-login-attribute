@@ -58,7 +58,7 @@ class KeycloakLoginAttributeProviderTest {
         page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill(password);
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
         // Then
-        assertThat(page.locator("#landingLoggedInUser")).hasText(expected);
+        assertThat(page.locator("#loggedInUser")).hasText(expected);
     }
 
     @Test
@@ -74,7 +74,7 @@ class KeycloakLoginAttributeProviderTest {
         page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill(password);
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
         // Then
-        assertThat(page.locator("#landingLoggedInUser")).hasText(expected);
+        assertThat(page.locator("#loggedInUser")).hasText(expected);
     }
 
     @Test
