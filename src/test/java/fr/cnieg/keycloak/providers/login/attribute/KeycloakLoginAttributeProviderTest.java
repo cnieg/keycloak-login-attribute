@@ -50,7 +50,7 @@ class KeycloakLoginAttributeProviderTest {
         // Given
         String username = "janedoe";
         String password = "s3cr3t";
-        String expected = "Jane Doe";
+        String expected = username;
         // When
         page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
@@ -58,7 +58,7 @@ class KeycloakLoginAttributeProviderTest {
         page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill(password);
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
         // Then
-        assertThat(page.locator("#landingLoggedInUser")).hasText(expected);
+        assertThat(page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("username"))).hasValue(expected);
     }
 
     @Test
@@ -66,7 +66,7 @@ class KeycloakLoginAttributeProviderTest {
         // Given
         String attributeValueOfJohnDoe = "SHOULDBEOKFORLOGIN";
         String password = "s3cr3t";
-        String expected = "John Doe";
+        String expected = "johndoe";
         // When
         page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
@@ -74,7 +74,7 @@ class KeycloakLoginAttributeProviderTest {
         page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill(password);
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
         // Then
-        assertThat(page.locator("#landingLoggedInUser")).hasText(expected);
+        assertThat(page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("username"))).hasValue(expected);
     }
 
     @Test
