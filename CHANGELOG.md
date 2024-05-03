@@ -1,3 +1,10 @@
+## [1.4.8](https://github.com/cnieg/keycloak-login-attribute/compare/v1.4.7...v1.4.8) (2024-05-03)
+
+
+### Bug Fixes
+
+* json syntax error ([#239](https://github.com/cnieg/keycloak-login-attribute/issues/239)) ([1007d5c](https://github.com/cnieg/keycloak-login-attribute/commit/1007d5c0db9855eff2866621f6d703a471139d54))
+
 ## [1.4.7](https://github.com/cnieg/keycloak-login-attribute/compare/v1.4.6...v1.4.7) (2024-04-16)
 
 
