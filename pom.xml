@@ -14,22 +14,22 @@
     <properties>
         <revision>0.0.0-SNAPSHOT</revision>
         <java.version>21</java.version>
-        <keycloak.version>25.0.2</keycloak.version>
+        <keycloak.version>26.0.7</keycloak.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.8.0</maven-javadoc-plugin.version>
-        <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
+        <maven-javadoc-plugin.version>3.10.1</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
         <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
         <compiler-maven-plugin.version>3.13.0</compiler-maven-plugin.version>
-        <testcontainers-keycloak.version>3.4.0</testcontainers-keycloak.version>
+        <testcontainers-keycloak.version>3.5.1</testcontainers-keycloak.version>
         <rest-assured.version>5.3.2</rest-assured.version>
-        <slf4j-simple.version>2.0.15</slf4j-simple.version>
-        <playwright.version>1.45.1</playwright.version>
-        <testcontainers.version>1.20.1</testcontainers.version>
+        <slf4j-simple.version>2.0.16</slf4j-simple.version>
+        <playwright.version>1.49.0</playwright.version>
+        <testcontainers.version>1.20.4</testcontainers.version>
     </properties>
 
     <dependencies>
@@ -66,7 +66,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.10.3</version>
+            <version>5.11.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
