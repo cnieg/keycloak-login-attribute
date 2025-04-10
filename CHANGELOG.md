@@ -1,3 +1,45 @@
+## [1.4.28](https://github.com/cnieg/keycloak-login-attribute/compare/v1.4.27...v1.4.28) (2025-03-14)
+
+
+### Bug Fixes
+
+* **deps:** update keycloak.version to v26.1.4 ([#321](https://github.com/cnieg/keycloak-login-attribute/issues/321)) ([52b7d59](https://github.com/cnieg/keycloak-login-attribute/commit/52b7d5931e9ef2782b747b7b20ece3cfbec57da5))
+
+## [1.4.27](https://github.com/cnieg/keycloak-login-attribute/compare/v1.4.26...v1.4.27) (2025-02-28)
+
+
+### Bug Fixes
+
+* **deps:** update keycloak.version to v26.1.3 ([#319](https://github.com/cnieg/keycloak-login-attribute/issues/319)) ([167e139](https://github.com/cnieg/keycloak-login-attribute/commit/167e139fc922eee7002a5982b95fcef0ebf01011))
+
+## [1.4.26](https://github.com/cnieg/keycloak-login-attribute/compare/v1.4.25...v1.4.26) (2025-02-11)
+
+
+### Bug Fixes
+
+* **deps:** update keycloak.version to v26.1.2 ([#311](https://github.com/cnieg/keycloak-login-attribute/issues/311)) ([9f11e15](https://github.com/cnieg/keycloak-login-attribute/commit/9f11e1541999a97376744777237011a4252277c0))
+
+## [1.4.25](https://github.com/cnieg/keycloak-login-attribute/compare/v1.4.24...v1.4.25) (2025-02-05)
+
+
+### Bug Fixes
+
+* **deps:** update keycloak.version to v26.1.1 ([#310](https://github.com/cnieg/keycloak-login-attribute/issues/310)) ([ca92b9e](https://github.com/cnieg/keycloak-login-attribute/commit/ca92b9eadb5136040e8e6a397b410b9732a4abc6))
+
+## [1.4.24](https://github.com/cnieg/keycloak-login-attribute/compare/v1.4.23...v1.4.24) (2025-01-15)
+
+
+### Bug Fixes
+
+* **deps:** update keycloak.version to v26.1.0 ([#306](https://github.com/cnieg/keycloak-login-attribute/issues/306)) ([be52118](https://github.com/cnieg/keycloak-login-attribute/commit/be521187fb6b7992540e3f89e2086c45b7a852b2))
+
+## [1.4.23](https://github.com/cnieg/keycloak-login-attribute/compare/v1.4.22...v1.4.23) (2025-01-14)
+
+
+### Bug Fixes
+
+* **deps:** update keycloak.version to v26.0.8 ([#305](https://github.com/cnieg/keycloak-login-attribute/issues/305)) ([ed27785](https://github.com/cnieg/keycloak-login-attribute/commit/ed2778543f2c0647ab771ce32c8c9ee12d4e2459))
+
 ## [1.4.22](https://github.com/cnieg/keycloak-login-attribute/compare/v1.4.21...v1.4.22) (2024-12-03)
 
 
