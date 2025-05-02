@@ -28,7 +28,7 @@
         <testcontainers-keycloak.version>3.6.0</testcontainers-keycloak.version>
         <rest-assured.version>5.3.2</rest-assured.version>
         <slf4j-simple.version>2.0.17</slf4j-simple.version>
-        <playwright.version>1.51.0</playwright.version>
+        <playwright.version>1.52.0</playwright.version>
         <testcontainers.version>1.21.0</testcontainers.version>
     </properties>
 
