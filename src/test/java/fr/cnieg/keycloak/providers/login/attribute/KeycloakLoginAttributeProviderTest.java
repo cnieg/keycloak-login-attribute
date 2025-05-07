@@ -16,10 +16,8 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 class KeycloakLoginAttributeProviderTest {
     @Container
     private static final KeycloakContainer KEYCLOAK_CONTAINER = new KeycloakContainer()
-            .withProviderClassesFrom("target/classes")
-            .WithPortBinding(9000, true)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilHttpRequestIsSucceeded(request => request.ForPath("/health/ready").ForPort(9000)))
-            .withRealmImportFile("/login-attribute-realm.json");
+            .withDefaultProviderClasses()
+            .withRealmImportFile("/testloginattribute-realm.json");
     private static Playwright playwright;
     private static Browser browser;
     BrowserContext context;
