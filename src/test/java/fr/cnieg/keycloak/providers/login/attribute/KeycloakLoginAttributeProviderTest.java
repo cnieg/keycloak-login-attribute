@@ -17,6 +17,7 @@ class KeycloakLoginAttributeProviderTest {
     @Container
     private static final KeycloakContainer KEYCLOAK_CONTAINER = new KeycloakContainer()
             .withProviderClassesFrom("target/classes")
+            .WithEnvironment("KC_HTTP_MANAGEMENT_PORT", "8080")
             .withRealmImportFile("/login-attribute-realm.json");
     private static Playwright playwright;
     private static Browser browser;
