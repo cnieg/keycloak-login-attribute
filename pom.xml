@@ -25,7 +25,7 @@
         <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
         <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
         <compiler-maven-plugin.version>3.14.0</compiler-maven-plugin.version>
-        <testcontainers-keycloak.version>3.6.0</testcontainers-keycloak.version>
+        <testcontainers-keycloak.version>3.7.0</testcontainers-keycloak.version>
         <rest-assured.version>5.3.2</rest-assured.version>
         <slf4j-simple.version>2.0.17</slf4j-simple.version>
         <playwright.version>1.52.0</playwright.version>
@@ -50,6 +50,12 @@
             <artifactId>keycloak-services</artifactId>
             <version>${keycloak.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.slf4j</groupId>
+                    <artifactId>slf4j-jboss-logmanager</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.dasniko</groupId>
