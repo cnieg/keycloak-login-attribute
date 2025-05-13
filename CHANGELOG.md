@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/cnieg/keycloak-login-attribute/compare/v1.7.0...v1.8.0) (2025-05-13)
+
+
+### Features
+
+* Update pom.xml ([#340](https://github.com/cnieg/keycloak-login-attribute/issues/340)) ([2e088c6](https://github.com/cnieg/keycloak-login-attribute/commit/2e088c69720fe1c518c950729f48cffe5809f311))
+
 # [1.7.0](https://github.com/cnieg/keycloak-login-attribute/compare/v1.6.0...v1.7.0) (2025-05-13)
 
 
