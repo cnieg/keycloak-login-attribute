@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/cnieg/keycloak-login-attribute/compare/v1.6.0...v1.7.0) (2025-05-13)
+
+
+### Features
+
+* test release ([#339](https://github.com/cnieg/keycloak-login-attribute/issues/339)) ([26f48bf](https://github.com/cnieg/keycloak-login-attribute/commit/26f48bf4d4edb193ee83a771df53738ea4d25215))
+
 # [1.6.0](https://github.com/cnieg/keycloak-login-attribute/compare/v1.5.0...v1.6.0) (2025-05-13)
 
 
