@@ -3,7 +3,7 @@ name: CI
 on: push
 
 env:
-  mainBranchName: master
+  mainBranchName: main
   semanticReleaseVersion: 19.0.5
   semanticChangelogVersion: 6.0.1
   semanticGitVersion: 10.0.1
