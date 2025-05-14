@@ -22,7 +22,7 @@ Just drop the jar into the _/opt/keycloak_ subdirectory of your Keycloak install
 
 For example, you can add this snippet in a Dockerfile
 
-```dockerfile
+```dockerfile 
 WORKDIR /opt/keycloak
 
 # plugins
