@@ -142,7 +142,6 @@
                        <version>${central-publishing-maven-plugin.version}</version>
                        <extensions>true</extensions>
                        <configuration>
-                           <publishingServerId>ossrh</publishingServerId>
                            <autoPublish>true</autoPublish>
                            <waitUntil>published</waitUntil>
                        </configuration>
@@ -243,11 +242,11 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>ossrh</id>
+            <id>central</id>
             <url>https://central.sonatype.com</url>
         </snapshotRepository>
         <repository>
-            <id>ossrh</id>
+            <id>central</id>
             <url>https://central.sonatype.com</url>
         </repository>
     </distributionManagement>
