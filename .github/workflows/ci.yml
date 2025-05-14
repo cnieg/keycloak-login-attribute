@@ -45,14 +45,11 @@ jobs:
           githubServer: false
           properties: |
             [
-              {"skipNexusStagingDeployMojo": "false"},
-              {"gpg.passphrase": "${{ secrets.GPG_PASSPHRASE }}"},
-              {"altSnapshotDeploymentRepository": "snapshots::default::https://oss.sonatype.org/content/repositories/snapshots"},
-              {"altReleaseDeploymentRepository": "releases::default::https://oss.sonatype.org/service/local/staging/deploy/maven2"}
+              {"gpg.passphrase": "${{ secrets.GPG_PASSPHRASE }}"}
             ]
           servers: |
             [{
-                "id": "ossrh",
+                "id": "central",
                 "username": "${{ secrets.NEXUS_USERNAME }}",
                 "password": "${{ secrets.NEXUS_PASSWORD }}"
             }]
