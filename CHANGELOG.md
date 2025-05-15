@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/cnieg/keycloak-login-attribute/compare/v1.10.0...v1.11.0) (2025-05-15)
+
+
+### Features
+
+* change urls ([#344](https://github.com/cnieg/keycloak-login-attribute/issues/344)) ([7438e8f](https://github.com/cnieg/keycloak-login-attribute/commit/7438e8f3f70792e74a451366b635e4ac1d61a939))
+
 # [1.10.0](https://github.com/cnieg/keycloak-login-attribute/compare/v1.9.0...v1.10.0) (2025-05-14)
 
 
