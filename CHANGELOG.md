@@ -1,3 +1,10 @@
+## [1.11.2](https://github.com/cnieg/keycloak-login-attribute/compare/v1.11.1...v1.11.2) (2025-06-27)
+
+
+### Bug Fixes
+
+* add brute force verification for login with attribute([#203](https://github.com/cnieg/keycloak-login-attribute/issues/203)) ([#356](https://github.com/cnieg/keycloak-login-attribute/issues/356)) ([bd64f6a](https://github.com/cnieg/keycloak-login-attribute/commit/bd64f6ac17716d04c098fe2cb99e29a55f26f6c3))
+
 ## [1.11.1](https://github.com/cnieg/keycloak-login-attribute/compare/v1.11.0...v1.11.1) (2025-05-28)
 
 
