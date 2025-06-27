@@ -35,14 +35,14 @@
   "duplicateEmailsAllowed" : false,
   "resetPasswordAllowed" : true,
   "editUsernameAllowed" : false,
-  "bruteForceProtected" : false,
+  "bruteForceProtected" : true,
   "permanentLockout" : false,
   "maxFailureWaitSeconds" : 900,
   "minimumQuickLoginWaitSeconds" : 60,
   "waitIncrementSeconds" : 60,
   "quickLoginCheckMilliSeconds" : 1000,
   "maxDeltaTimeSeconds" : 43200,
-  "failureFactor" : 30,
+  "failureFactor" : 2,
   "roles" : {
     "realm" : [ {
       "id" : "53910866-fac2-46d1-9b54-ffbe4a37aa1d",
@@ -412,6 +412,30 @@
     },
     "credentials" : [ {
       "id" : "c5839ec3-c436-4ef6-8536-ddf33fc0f71f",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1693995906351,
+      "secretData" : "{\"value\":\"ikKfMrlVcOfVKB+P09Fw+af+yelgHU+wQKmmHTCoaeI=\",\"salt\":\"v4mVcUugSFf/zI6dxQ3cuQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-testloginattribute" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "createdTimestamp" : 1693995867707,
+    "username" : "billdoe",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Bill",
+    "lastName" : "Doe",
+    "email" : "bill.doe@fake.mail",
+    "attributes" : {
+      "idAttribute" : [ "SHOULDBEOKFORLOGINTOO" ]
+    },
+    "credentials" : [ {
       "type" : "password",
       "userLabel" : "My password",
       "createdDate" : 1693995906351,

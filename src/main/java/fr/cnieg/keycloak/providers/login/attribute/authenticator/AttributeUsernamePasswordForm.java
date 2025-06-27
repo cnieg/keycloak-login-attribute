@@ -121,6 +121,9 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
             user = KeycloakModelUtils.findUserByNameOrEmail(context.getSession(), context.getRealm(), userName);
             if (user == null) {
                 user = this.getUserByAttribute(context, userName);
+                if(user != null) {
+                    context.getAuthenticationSession().setAuthNote(AbstractUsernameFormAuthenticator.ATTEMPTED_USERNAME, user.getUsername());
+                }
             }
         } catch (ModelDuplicateException mde) {
             ServicesLogger.LOGGER.modelDuplicateException(mde);

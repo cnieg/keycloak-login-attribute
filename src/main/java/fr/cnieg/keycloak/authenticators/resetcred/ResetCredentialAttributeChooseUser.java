@@ -5,6 +5,7 @@ import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
+import org.keycloak.authentication.authenticators.browser.AbstractUsernameFormAuthenticator;
 import org.keycloak.authentication.authenticators.resetcred.ResetCredentialChooseUser;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.models.RealmModel;
@@ -83,6 +84,7 @@ public class ResetCredentialAttributeChooseUser extends ResetCredentialChooseUse
                 context.clearUser();
             } else {
                 context.setUser(user);
+                context.getAuthenticationSession().setAuthNote(AbstractUsernameFormAuthenticator.ATTEMPTED_USERNAME, user.getUsername());
             }
 
             context.success();

@@ -94,6 +94,31 @@ class KeycloakLoginAttributeProviderTest {
     }
 
     @Test
+    void test_user_bill_should_be_locked_after_two_attempts_with_attribute() {
+        // Given
+        String attributeValueOfBillDoe = "SHOULDBEOKFORLOGINTOO";
+        String password = "fakes3cr3t";
+        String expected = "Invalid username or password.";
+        // When
+        page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
+        page.getByLabel("Username").fill(attributeValueOfBillDoe);
+        page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill(password);
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
+        page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill(password);
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
+        // Then
+        assertThat(page.getByText(expected)).isVisible();
+        // Given
+        password = "s3cr3t";
+        // When
+        page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill(password);
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
+
+        assertThat(page.getByText(expected)).isVisible();
+    }
+
+    @Test
     void test_should_reset_jane_with_login_name() {
         // Given
         String username = "janedoe";
