@@ -137,7 +137,7 @@ class KeycloakLoginAttributeProviderTest {
     void test_should_reset_john_with_attribute() {
         // Given
         String attributeValueOfJohnDoe = "SHOULDBEOKFORLOGIN";
-        String expected = "Failed to send email, please try again later.";
+        String expected = "You should receive an email shortly with further instructions.";
         // When
         page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
