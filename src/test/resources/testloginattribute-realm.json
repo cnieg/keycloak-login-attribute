@@ -1125,8 +1125,13 @@
     "xXSSProtection" : "1; mode=block",
     "strictTransportSecurity" : "max-age=31536000; includeSubDomains"
   },
-  "smtpServer" : { },
-  "eventsEnabled" : false,
+  "smtpServer" : {
+    "host" : "host.testcontainers.internal",
+    "port" : "2525",
+    "from" : "noreply@example.test",
+    "fromDisplayName" : "Keycloak Test"
+  },
+  "eventsEnabled" : true,
   "eventsListeners" : [ "jboss-logging" ],
   "enabledEventTypes" : [ ],
   "adminEventsEnabled" : false,
