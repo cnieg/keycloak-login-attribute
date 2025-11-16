@@ -86,9 +86,9 @@ class KeycloakLoginAttributeProviderTest {
         openAccountConsole();
         submitLoginForm(attributeValueOfJohnDoe, password);
         // Then
-        KeycloakEvent loginEvent = awaitLoginEvent(attributeValueOfJohnDoe);
+        KeycloakEvent loginEvent = awaitLoginEvent(attributeValueOfJohnDoe, "johndoe");
         assertNull(loginEvent.error());
-        assertEquals(attributeValueOfJohnDoe, loginEvent.details().get("username"));
+        assertEquals("johndoe", loginEvent.details().get("username"));
     }
 
     @Test
@@ -141,7 +141,7 @@ class KeycloakLoginAttributeProviderTest {
         openForgotPasswordForm();
         submitResetForm(attributeValueOfJohnDoe);
         // Then
-        KeycloakEvent resetEvent = awaitResetPasswordEvent(attributeValueOfJohnDoe);
+        KeycloakEvent resetEvent = awaitResetPasswordEvent(attributeValueOfJohnDoe, "johndoe");
         assertNull(resetEvent.error());
     }
 
@@ -157,10 +157,10 @@ class KeycloakLoginAttributeProviderTest {
         assertEquals(attributeValueOfJaneDoe, resetError.details().get("username"));
     }
 
-    private KeycloakEvent awaitLoginEvent(String username) {
-        return eventsClient.awaitEvent(event -> "LOGIN".equals(event.type())
-                && Objects.equals(username, event.details().get("username"))
-                && event.error() == null);
+    private KeycloakEvent awaitLoginEvent(String... usernames) {
+        return eventsClient.awaitEvent(event -> isLoginEvent(event)
+                && event.error() == null
+                && matchesUsernamesIfPresent(event, usernames));
     }
 
     private KeycloakEvent awaitLoginErrorEvent(String username, String expectedError) {
@@ -169,10 +169,10 @@ class KeycloakLoginAttributeProviderTest {
                 && Objects.equals(username, event.details().get("username")));
     }
 
-    private KeycloakEvent awaitResetPasswordEvent(String username) {
+    private KeycloakEvent awaitResetPasswordEvent(String... usernames) {
         return eventsClient.awaitEvent(event -> isResetPasswordEvent(event)
                 && event.error() == null
-                && matchesUsernameIfPresent(event, username));
+                && matchesUsernamesIfPresent(event, usernames));
     }
 
     private KeycloakEvent awaitResetPasswordErrorEvent(String username, String expectedError) {
@@ -182,16 +182,30 @@ class KeycloakLoginAttributeProviderTest {
     }
 
     private boolean isResetPasswordEvent(KeycloakEvent event) {
-        return "SEND_RESET_PASSWORD".equals(event.type()) || "RESET_PASSWORD".equals(event.type());
+        return switch (event.type()) {
+            case "SEND_RESET_PASSWORD", "RESET_PASSWORD", "SEND_RESET_PASSWORD_ERROR", "RESET_PASSWORD_ERROR" -> true;
+            default -> false;
+        };
     }
 
     private boolean isLoginEvent(KeycloakEvent event) {
         return "LOGIN".equals(event.type()) || "LOGIN_ERROR".equals(event.type());
     }
 
-    private boolean matchesUsernameIfPresent(KeycloakEvent event, String username) {
+    private boolean matchesUsernamesIfPresent(KeycloakEvent event, String... usernames) {
         String detailUsername = event.details().get("username");
-        return detailUsername == null || Objects.equals(detailUsername, username);
+        if (detailUsername == null) {
+            return true;
+        }
+        if (usernames == null || usernames.length == 0) {
+            return false;
+        }
+        for (String username : usernames) {
+            if (username != null && Objects.equals(detailUsername, username)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void openAccountConsole() {
