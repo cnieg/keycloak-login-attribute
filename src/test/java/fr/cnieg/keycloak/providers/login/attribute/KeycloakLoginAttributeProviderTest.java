@@ -13,6 +13,9 @@ import org.subethamail.wiser.Wiser;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.net.URI;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -304,6 +307,39 @@ class KeycloakLoginAttributeProviderTest {
         return KEYCLOAK_CONTAINER.getAuthServerUrl() + url;
     }
 
+    private static Map<String, String> parseQueryParams(String query) {
+        if (query == null || query.isBlank()) {
+            return Collections.emptyMap();
+        }
+        Map<String, String> params = new HashMap<>();
+        String[] parts = query.split("&");
+        for (String part : parts) {
+            if (part.isBlank()) {
+                continue;
+            }
+            int idx = part.indexOf('=');
+            String key;
+            String value;
+            if (idx >= 0) {
+                key = part.substring(0, idx);
+                value = part.substring(idx + 1);
+            } else {
+                key = part;
+                value = "";
+            }
+            params.put(urlDecode(key), urlDecode(value));
+        }
+        return params;
+    }
+
+    private static String urlDecode(String value) {
+        return URLDecoder.decode(value, StandardCharsets.UTF_8);
+    }
+
+    private static String urlEncode(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
+    }
+
     private Response followRedirectsIfNeeded(HttpSession session, Response response) {
         Response current = response;
         int redirectCount = 0;
@@ -335,15 +371,40 @@ class KeycloakLoginAttributeProviderTest {
             }
             Element resetLink = document.getElementById("kc-reset-password");
             if (resetLink == null) {
+                resetLink = document.selectFirst("a[href*=reset-credentials]");
+            }
+            String resetPasswordUrl = resetLink != null ? toAbsoluteUrl(resetLink.attr("href")) : deriveResetPasswordUrl(form);
+            if (resetPasswordUrl == null || resetPasswordUrl.isBlank()) {
                 fail("Reset password link not found in login page");
             }
             Element credentialInput = form.selectFirst("input[name=credentialId]");
             String credentialId = credentialInput != null ? credentialInput.attr("value") : "";
             return new LoginForm(
                     toAbsoluteUrl(form.attr("action")),
-                    toAbsoluteUrl(resetLink.attr("href")),
+                    resetPasswordUrl,
                     credentialId
             );
+        }
+
+        private static String deriveResetPasswordUrl(Element form) {
+            String action = form.attr("action");
+            if (action == null || action.isBlank()) {
+                return null;
+            }
+            try {
+                URI actionUri = URI.create(toAbsoluteUrl(action));
+                Map<String, String> params = parseQueryParams(actionUri.getRawQuery());
+                String tabId = params.get("tab_id");
+                if (tabId == null || tabId.isBlank()) {
+                    return null;
+                }
+                String clientId = params.getOrDefault("client_id", CLIENT_ID);
+                String base = KEYCLOAK_CONTAINER.getAuthServerUrl()
+                        + "/realms/" + REALM + "/login-actions/reset-credentials";
+                return base + "?client_id=" + urlEncode(clientId) + "&tab_id=" + urlEncode(tabId);
+            } catch (IllegalArgumentException ex) {
+                return null;
+            }
         }
     }
 
