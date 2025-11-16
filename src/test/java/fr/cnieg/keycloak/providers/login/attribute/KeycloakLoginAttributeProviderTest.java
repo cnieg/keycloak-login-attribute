@@ -1,34 +1,39 @@
 package fr.cnieg.keycloak.providers.login.attribute;
 
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserContext;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Playwright;
-import com.microsoft.playwright.options.AriaRole;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.*;
 import org.subethamail.wiser.Wiser;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @Testcontainers
 class KeycloakLoginAttributeProviderTest {
     private static final int SMTP_PORT = 2525;
+    private static final String REALM = "testloginattribute";
+    private static final String CLIENT_ID = "account-console";
 
     static {
         org.testcontainers.Testcontainers.exposeHostPorts(SMTP_PORT);
@@ -40,39 +45,25 @@ class KeycloakLoginAttributeProviderTest {
             .withAdminPassword("admin")
             .withDefaultProviderClasses()
             .withRealmImportFile("/testloginattribute-realm.json");
-    private static Playwright playwright;
-    private static Browser browser;
     private static KeycloakEventsClient eventsClient;
     private static Wiser smtpServer;
-    BrowserContext context;
-    Page page;
 
     @BeforeAll
-    static void launchBrowser() {
+    static void startInfrastructure() {
         smtpServer = new Wiser();
         smtpServer.setPort(SMTP_PORT);
         smtpServer.start();
-        playwright = Playwright.create();
-        browser = playwright.chromium().launch();
-        eventsClient = new KeycloakEventsClient(KEYCLOAK_CONTAINER, "testloginattribute");
+        eventsClient = new KeycloakEventsClient(KEYCLOAK_CONTAINER, REALM);
     }
 
     @AfterAll
-    static void closeBrowser() {
+    static void stopInfrastructure() {
         smtpServer.stop();
-        playwright.close();
     }
 
     @BeforeEach
-    void createContextAndPage() {
-        context = browser.newContext();
-        page = context.newPage();
+    void clearEvents() {
         eventsClient.clearEvents();
-    }
-
-    @AfterEach
-    void closeContext() {
-        context.close();
     }
 
     @Test
@@ -81,8 +72,9 @@ class KeycloakLoginAttributeProviderTest {
         String username = "janedoe";
         String password = "s3cr3t";
         // When
-        openAccountConsole();
-        submitLoginForm(username, password);
+        HttpSession session = new HttpSession();
+        LoginForm loginForm = loadLoginForm(session);
+        submitLoginForm(session, loginForm, username, password);
         // Then
         KeycloakEvent loginEvent = awaitLoginEvent(username);
         assertNull(loginEvent.error());
@@ -95,8 +87,9 @@ class KeycloakLoginAttributeProviderTest {
         String attributeValueOfJohnDoe = "SHOULDBEOKFORLOGIN";
         String password = "s3cr3t";
         // When
-        openAccountConsole();
-        submitLoginForm(attributeValueOfJohnDoe, password);
+        HttpSession session = new HttpSession();
+        LoginForm loginForm = loadLoginForm(session);
+        submitLoginForm(session, loginForm, attributeValueOfJohnDoe, password);
         // Then
         KeycloakEvent loginEvent = awaitLoginEvent(attributeValueOfJohnDoe, "johndoe");
         assertNull(loginEvent.error());
@@ -109,8 +102,9 @@ class KeycloakLoginAttributeProviderTest {
         String attributeValueOfJaneDoe = "SHOULDBEkoFORLOGIN";
         String password = "s3cr3t";
         // When
-        openAccountConsole();
-        submitLoginForm(attributeValueOfJaneDoe, password);
+        HttpSession session = new HttpSession();
+        LoginForm loginForm = loadLoginForm(session);
+        submitLoginForm(session, loginForm, attributeValueOfJaneDoe, password);
         // Then
         KeycloakEvent loginError = awaitLoginErrorEvent(attributeValueOfJaneDoe, "user_not_found");
         assertEquals(attributeValueOfJaneDoe, loginError.details().get("username"));
@@ -122,12 +116,13 @@ class KeycloakLoginAttributeProviderTest {
         String attributeValueOfBillDoe = "SHOULDBEOKFORLOGINTOO";
         String invalidPassword = "fakes3cr3t";
         // When
-        openAccountConsole();
-        submitLoginForm(attributeValueOfBillDoe, invalidPassword);
-        page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill(invalidPassword);
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
-        page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill("s3cr3t");
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
+        HttpSession session = new HttpSession();
+        LoginForm loginForm = loadLoginForm(session);
+        loginForm = submitLoginForm(session, loginForm, attributeValueOfBillDoe, invalidPassword);
+        assertNotNull(loginForm, "Expected to remain on login form after invalid password");
+        loginForm = submitLoginForm(session, loginForm, attributeValueOfBillDoe, invalidPassword);
+        assertNotNull(loginForm, "Expected to remain on login form after second invalid password");
+        submitLoginForm(session, loginForm, attributeValueOfBillDoe, "s3cr3t");
         // Then
         KeycloakEvent lockEvent = awaitLoginErrorEvent(attributeValueOfBillDoe, "user_temporarily_disabled");
         assertEquals(attributeValueOfBillDoe, lockEvent.details().get("username"));
@@ -138,8 +133,10 @@ class KeycloakLoginAttributeProviderTest {
         // Given
         String username = "janedoe";
         // When
-        openForgotPasswordForm();
-        submitResetForm(username);
+        HttpSession session = new HttpSession();
+        LoginForm loginForm = loadLoginForm(session);
+        ResetPasswordForm resetForm = loadResetPasswordForm(session, loginForm.resetPasswordUrl());
+        submitResetForm(session, resetForm, username);
         // Then
         KeycloakEvent resetEvent = awaitResetPasswordEvent(username);
         assertNull(resetEvent.error());
@@ -150,8 +147,10 @@ class KeycloakLoginAttributeProviderTest {
         // Given
         String attributeValueOfJohnDoe = "SHOULDBEOKFORLOGIN";
         // When
-        openForgotPasswordForm();
-        submitResetForm(attributeValueOfJohnDoe);
+        HttpSession session = new HttpSession();
+        LoginForm loginForm = loadLoginForm(session);
+        ResetPasswordForm resetForm = loadResetPasswordForm(session, loginForm.resetPasswordUrl());
+        submitResetForm(session, resetForm, attributeValueOfJohnDoe);
         // Then
         KeycloakEvent resetEvent = awaitResetPasswordEvent(attributeValueOfJohnDoe, "johndoe");
         assertNull(resetEvent.error());
@@ -162,8 +161,10 @@ class KeycloakLoginAttributeProviderTest {
         // Given
         String attributeValueOfJaneDoe = "SHOULDBEkoFORLOGIN";
         // When
-        openForgotPasswordForm();
-        submitResetForm(attributeValueOfJaneDoe);
+        HttpSession session = new HttpSession();
+        LoginForm loginForm = loadLoginForm(session);
+        ResetPasswordForm resetForm = loadResetPasswordForm(session, loginForm.resetPasswordUrl());
+        submitResetForm(session, resetForm, attributeValueOfJaneDoe);
         // Then
         KeycloakEvent resetError = awaitResetPasswordErrorEvent(attributeValueOfJaneDoe, "user_not_found");
         assertEquals(attributeValueOfJaneDoe, resetError.details().get("username"));
@@ -228,29 +229,132 @@ class KeycloakLoginAttributeProviderTest {
         return false;
     }
 
-    private void openAccountConsole() {
-        page.navigate(KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/testloginattribute/account");
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign in")).click();
+    private LoginForm loadLoginForm(HttpSession session) {
+        Response response = session.get(authorizationEndpoint(), Map.of(
+                "client_id", CLIENT_ID,
+                "redirect_uri", accountRedirectUri(),
+                "response_type", "code",
+                "scope", "openid",
+                "state", UUID.randomUUID().toString(),
+                "nonce", UUID.randomUUID().toString()
+        ));
+        assertEquals(200, response.statusCode(), "Unable to load login page");
+        return LoginForm.parse(response.getBody().asString());
     }
 
-    private void submitLoginForm(String username, String password) {
-        page.getByLabel("Username").fill(username);
-        page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill(password);
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
+    private LoginForm submitLoginForm(HttpSession session, LoginForm form, String username, String password) {
+        Response response = session.postForm(form.action(), Map.of(
+                "username", username,
+                "password", password,
+                "credentialId", form.credentialId()
+        ));
+        if (response.statusCode() == 200) {
+            return LoginForm.parse(response.getBody().asString());
+        }
+        if (response.statusCode() == 302 || response.statusCode() == 303) {
+            return null;
+        }
+        fail("Unexpected status code when submitting login form: " + response.statusCode());
+        return null;
     }
 
-    private void openForgotPasswordForm() {
-        openAccountConsole();
-        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Forgot Password?"))
-                .click();
+    private ResetPasswordForm loadResetPasswordForm(HttpSession session, String url) {
+        Response response = session.get(url, Collections.emptyMap());
+        assertEquals(200, response.statusCode(), "Unable to load reset password form");
+        return ResetPasswordForm.parse(response.getBody().asString());
     }
 
-    private void submitResetForm(String username) {
-        page.getByLabel("Username").fill(username);
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Submit")).click();
+    private void submitResetForm(HttpSession session, ResetPasswordForm form, String username) {
+        Response response = session.postForm(form.action(), Map.of("username", username));
+        if (response.statusCode() == 200 || response.statusCode() == 302) {
+            return;
+        }
+        fail("Unexpected status code when submitting reset password form: " + response.statusCode());
+    }
+
+    private String authorizationEndpoint() {
+        return KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/" + REALM + "/protocol/openid-connect/auth";
+    }
+
+    private String accountRedirectUri() {
+        return KEYCLOAK_CONTAINER.getAuthServerUrl() + "/realms/" + REALM + "/account/";
+    }
+
+    private static String toAbsoluteUrl(String url) {
+        if (url == null || url.isBlank()) {
+            return url;
+        }
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+            return url;
+        }
+        if (!url.startsWith("/")) {
+            url = "/" + url;
+        }
+        return KEYCLOAK_CONTAINER.getAuthServerUrl() + url;
     }
 
     private record KeycloakEvent(String type, String error, Map<String, String> details) {
+    }
+
+    private record LoginForm(String action, String resetPasswordUrl, String credentialId) {
+        static LoginForm parse(String html) {
+            Document document = Jsoup.parse(html);
+            Element form = document.getElementById("kc-form-login");
+            if (form == null) {
+                fail("Login form not found in response");
+            }
+            Element resetLink = document.getElementById("kc-reset-password");
+            if (resetLink == null) {
+                fail("Reset password link not found in login page");
+            }
+            Element credentialInput = form.selectFirst("input[name=credentialId]");
+            String credentialId = credentialInput != null ? credentialInput.attr("value") : "";
+            return new LoginForm(
+                    toAbsoluteUrl(form.attr("action")),
+                    toAbsoluteUrl(resetLink.attr("href")),
+                    credentialId
+            );
+        }
+    }
+
+    private record ResetPasswordForm(String action) {
+        static ResetPasswordForm parse(String html) {
+            Document document = Jsoup.parse(html);
+            Element form = document.getElementById("kc-reset-password-form");
+            if (form == null) {
+                fail("Reset password form not found in response");
+            }
+            return new ResetPasswordForm(toAbsoluteUrl(form.attr("action")));
+        }
+    }
+
+    private static class HttpSession {
+        private final Map<String, String> cookies = new HashMap<>();
+
+        Response get(String url, Map<String, ?> queryParams) {
+            RequestSpecification specification = given()
+                    .redirects().follow(false)
+                    .cookies(cookies);
+            if (queryParams != null && !queryParams.isEmpty()) {
+                specification.queryParams(queryParams);
+            }
+            Response response = specification.get(url);
+            cookies.putAll(response.getCookies());
+            return response;
+        }
+
+        Response postForm(String url, Map<String, ?> formParams) {
+            RequestSpecification specification = given()
+                    .redirects().follow(false)
+                    .cookies(cookies)
+                    .contentType(ContentType.URLENC);
+            if (formParams != null && !formParams.isEmpty()) {
+                specification.formParams(formParams);
+            }
+            Response response = specification.post(url);
+            cookies.putAll(response.getCookies());
+            return response;
+        }
     }
 
     private static class KeycloakEventsClient {
