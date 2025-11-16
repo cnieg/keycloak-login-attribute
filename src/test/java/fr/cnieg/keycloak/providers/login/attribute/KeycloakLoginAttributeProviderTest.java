@@ -72,7 +72,7 @@ class KeycloakLoginAttributeProviderTest {
         openAccountConsole();
         submitLoginForm(username, password);
         // Then
-        KeycloakEvent loginEvent = eventsClient.awaitEvent(event -> "LOGIN".equals(event.type()));
+        KeycloakEvent loginEvent = awaitLoginEvent(username);
         assertNull(loginEvent.error());
         assertEquals(username, loginEvent.details().get("username"));
     }
@@ -86,7 +86,7 @@ class KeycloakLoginAttributeProviderTest {
         openAccountConsole();
         submitLoginForm(attributeValueOfJohnDoe, password);
         // Then
-        KeycloakEvent loginEvent = eventsClient.awaitEvent(event -> "LOGIN".equals(event.type()));
+        KeycloakEvent loginEvent = awaitLoginEvent(attributeValueOfJohnDoe);
         assertNull(loginEvent.error());
         assertEquals(attributeValueOfJohnDoe, loginEvent.details().get("username"));
     }
@@ -100,8 +100,7 @@ class KeycloakLoginAttributeProviderTest {
         openAccountConsole();
         submitLoginForm(attributeValueOfJaneDoe, password);
         // Then
-        KeycloakEvent loginError = eventsClient.awaitEvent(event -> "LOGIN_ERROR".equals(event.type())
-                && "user_not_found".equals(event.error()));
+        KeycloakEvent loginError = awaitLoginErrorEvent(attributeValueOfJaneDoe, "user_not_found");
         assertEquals(attributeValueOfJaneDoe, loginError.details().get("username"));
     }
 
@@ -118,8 +117,7 @@ class KeycloakLoginAttributeProviderTest {
         page.getByLabel("Password", new Page.GetByLabelOptions().setExact(true)).fill("s3cr3t");
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
         // Then
-        KeycloakEvent lockEvent = eventsClient.awaitEvent(event -> "LOGIN_ERROR".equals(event.type())
-                && "user_temporarily_disabled".equals(event.error()));
+        KeycloakEvent lockEvent = awaitLoginErrorEvent(attributeValueOfBillDoe, "user_temporarily_disabled");
         assertEquals(attributeValueOfBillDoe, lockEvent.details().get("username"));
     }
 
@@ -131,8 +129,7 @@ class KeycloakLoginAttributeProviderTest {
         openForgotPasswordForm();
         submitResetForm(username);
         // Then
-        KeycloakEvent resetEvent = eventsClient.awaitEvent(event -> "SEND_RESET_PASSWORD".equals(event.type())
-                && event.error() == null);
+        KeycloakEvent resetEvent = awaitResetPasswordEvent(username);
         assertNull(resetEvent.error());
     }
 
@@ -144,8 +141,7 @@ class KeycloakLoginAttributeProviderTest {
         openForgotPasswordForm();
         submitResetForm(attributeValueOfJohnDoe);
         // Then
-        KeycloakEvent resetEvent = eventsClient.awaitEvent(event -> "SEND_RESET_PASSWORD".equals(event.type())
-                && event.error() == null);
+        KeycloakEvent resetEvent = awaitResetPasswordEvent(attributeValueOfJohnDoe);
         assertNull(resetEvent.error());
     }
 
@@ -157,9 +153,45 @@ class KeycloakLoginAttributeProviderTest {
         openForgotPasswordForm();
         submitResetForm(attributeValueOfJaneDoe);
         // Then
-        KeycloakEvent resetError = eventsClient.awaitEvent(event -> "SEND_RESET_PASSWORD_ERROR".equals(event.type())
-                && "user_not_found".equals(event.error()));
+        KeycloakEvent resetError = awaitResetPasswordErrorEvent(attributeValueOfJaneDoe, "user_not_found");
         assertEquals(attributeValueOfJaneDoe, resetError.details().get("username"));
+    }
+
+    private KeycloakEvent awaitLoginEvent(String username) {
+        return eventsClient.awaitEvent(event -> "LOGIN".equals(event.type())
+                && Objects.equals(username, event.details().get("username"))
+                && event.error() == null);
+    }
+
+    private KeycloakEvent awaitLoginErrorEvent(String username, String expectedError) {
+        return eventsClient.awaitEvent(event -> isLoginEvent(event)
+                && Objects.equals(expectedError, event.error())
+                && Objects.equals(username, event.details().get("username")));
+    }
+
+    private KeycloakEvent awaitResetPasswordEvent(String username) {
+        return eventsClient.awaitEvent(event -> isResetPasswordEvent(event)
+                && event.error() == null
+                && matchesUsernameIfPresent(event, username));
+    }
+
+    private KeycloakEvent awaitResetPasswordErrorEvent(String username, String expectedError) {
+        return eventsClient.awaitEvent(event -> isResetPasswordEvent(event)
+                && Objects.equals(expectedError, event.error())
+                && Objects.equals(username, event.details().get("username")));
+    }
+
+    private boolean isResetPasswordEvent(KeycloakEvent event) {
+        return "SEND_RESET_PASSWORD".equals(event.type()) || "RESET_PASSWORD".equals(event.type());
+    }
+
+    private boolean isLoginEvent(KeycloakEvent event) {
+        return "LOGIN".equals(event.type()) || "LOGIN_ERROR".equals(event.type());
+    }
+
+    private boolean matchesUsernameIfPresent(KeycloakEvent event, String username) {
+        String detailUsername = event.details().get("username");
+        return detailUsername == null || Objects.equals(detailUsername, username);
     }
 
     private void openAccountConsole() {
