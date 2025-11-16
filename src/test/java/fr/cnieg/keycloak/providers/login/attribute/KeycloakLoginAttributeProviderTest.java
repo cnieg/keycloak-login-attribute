@@ -10,7 +10,6 @@ import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.*;
 import org.subethamail.wiser.Wiser;
-import org.testcontainers.Testcontainers;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -32,7 +31,7 @@ class KeycloakLoginAttributeProviderTest {
     private static final int SMTP_PORT = 2525;
 
     static {
-        Testcontainers.exposeHostPorts(SMTP_PORT);
+        org.testcontainers.Testcontainers.exposeHostPorts(SMTP_PORT);
     }
 
     @Container
