@@ -238,6 +238,7 @@ class KeycloakLoginAttributeProviderTest {
                 "state", UUID.randomUUID().toString(),
                 "nonce", UUID.randomUUID().toString()
         ));
+        response = followRedirectIfNeeded(session, response);
         assertEquals(200, response.statusCode(), "Unable to load login page");
         return LoginForm.parse(response.getBody().asString());
     }
@@ -260,6 +261,7 @@ class KeycloakLoginAttributeProviderTest {
 
     private ResetPasswordForm loadResetPasswordForm(HttpSession session, String url) {
         Response response = session.get(url, Collections.emptyMap());
+        response = followRedirectIfNeeded(session, response);
         assertEquals(200, response.statusCode(), "Unable to load reset password form");
         return ResetPasswordForm.parse(response.getBody().asString());
     }
@@ -291,6 +293,22 @@ class KeycloakLoginAttributeProviderTest {
             url = "/" + url;
         }
         return KEYCLOAK_CONTAINER.getAuthServerUrl() + url;
+    }
+
+    private Response followRedirectIfNeeded(HttpSession session, Response response) {
+        if (response == null) {
+            return null;
+        }
+        if (!isRedirect(response.statusCode())) {
+            return response;
+        }
+        String location = response.getHeader("Location");
+        assertNotNull(location, "Redirect response missing Location header");
+        return session.get(toAbsoluteUrl(location), Collections.emptyMap());
+    }
+
+    private boolean isRedirect(int statusCode) {
+        return statusCode == 301 || statusCode == 302 || statusCode == 303 || statusCode == 307 || statusCode == 308;
     }
 
     private record KeycloakEvent(String type, String error, Map<String, String> details) {
