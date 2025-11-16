@@ -9,6 +9,8 @@ import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.*;
+import org.subethamail.wiser.Wiser;
+import org.testcontainers.Testcontainers;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -27,6 +29,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @Testcontainers
 class KeycloakLoginAttributeProviderTest {
+    private static final int SMTP_PORT = 2525;
+
+    static {
+        Testcontainers.exposeHostPorts(SMTP_PORT);
+    }
+
     @Container
     private static final KeycloakContainer KEYCLOAK_CONTAINER = new KeycloakContainer()
             .withAdminUsername("admin")
@@ -36,11 +44,15 @@ class KeycloakLoginAttributeProviderTest {
     private static Playwright playwright;
     private static Browser browser;
     private static KeycloakEventsClient eventsClient;
+    private static Wiser smtpServer;
     BrowserContext context;
     Page page;
 
     @BeforeAll
     static void launchBrowser() {
+        smtpServer = new Wiser();
+        smtpServer.setPort(SMTP_PORT);
+        smtpServer.start();
         playwright = Playwright.create();
         browser = playwright.chromium().launch();
         eventsClient = new KeycloakEventsClient(KEYCLOAK_CONTAINER, "testloginattribute");
@@ -48,6 +60,7 @@ class KeycloakLoginAttributeProviderTest {
 
     @AfterAll
     static void closeBrowser() {
+        smtpServer.stop();
         playwright.close();
     }
 
