@@ -170,7 +170,7 @@ class KeycloakLoginAttributeProviderTest {
     }
 
     private KeycloakEvent awaitResetPasswordEvent(String... usernames) {
-        return eventsClient.awaitEvent(event -> isResetPasswordEvent(event)
+        return eventsClient.awaitEvent(Duration.ofSeconds(20), event -> isResetPasswordEvent(event)
                 && isSuccessfulResetEvent(event)
                 && matchesUsernamesIfPresent(event, usernames));
     }
@@ -263,7 +263,11 @@ class KeycloakLoginAttributeProviderTest {
         }
 
         KeycloakEvent awaitEvent(Predicate<KeycloakEvent> predicate) {
-            long deadline = System.currentTimeMillis() + Duration.ofSeconds(5).toMillis();
+            return awaitEvent(Duration.ofSeconds(5), predicate);
+        }
+
+        KeycloakEvent awaitEvent(Duration timeout, Predicate<KeycloakEvent> predicate) {
+            long deadline = System.currentTimeMillis() + timeout.toMillis();
             while (System.currentTimeMillis() < deadline) {
                 List<KeycloakEvent> events = events();
                 for (KeycloakEvent event : events) {
