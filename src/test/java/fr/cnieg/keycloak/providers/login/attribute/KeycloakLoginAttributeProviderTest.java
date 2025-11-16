@@ -13,14 +13,19 @@ import org.subethamail.wiser.Wiser;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.Duration;
-import java.util.HashMap;
+import java.util.Base64;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
@@ -34,6 +39,7 @@ class KeycloakLoginAttributeProviderTest {
     private static final int SMTP_PORT = 2525;
     private static final String REALM = "testloginattribute";
     private static final String CLIENT_ID = "account-console";
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     static {
         org.testcontainers.Testcontainers.exposeHostPorts(SMTP_PORT);
@@ -230,13 +236,16 @@ class KeycloakLoginAttributeProviderTest {
     }
 
     private LoginForm loadLoginForm(HttpSession session) {
+        PkceParameters pkce = PkceParameters.generate();
         Response response = session.get(authorizationEndpoint(), Map.of(
                 "client_id", CLIENT_ID,
                 "redirect_uri", accountRedirectUri(),
                 "response_type", "code",
                 "scope", "openid",
                 "state", UUID.randomUUID().toString(),
-                "nonce", UUID.randomUUID().toString()
+                "nonce", UUID.randomUUID().toString(),
+                "code_challenge", pkce.codeChallenge(),
+                "code_challenge_method", pkce.codeChallengeMethod()
         ));
         response = followRedirectsIfNeeded(session, response);
         assertEquals(200, response.statusCode(), "Unable to load login page");
@@ -375,6 +384,22 @@ class KeycloakLoginAttributeProviderTest {
             Response response = specification.post(url);
             cookies.putAll(response.getCookies());
             return response;
+        }
+    }
+
+    private record PkceParameters(String codeChallenge, String codeChallengeMethod) {
+        static PkceParameters generate() {
+            byte[] verifierBytes = new byte[32];
+            SECURE_RANDOM.nextBytes(verifierBytes);
+            String codeVerifier = Base64.getUrlEncoder().withoutPadding().encodeToString(verifierBytes);
+            try {
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                byte[] hashed = digest.digest(codeVerifier.getBytes(StandardCharsets.US_ASCII));
+                String codeChallenge = Base64.getUrlEncoder().withoutPadding().encodeToString(hashed);
+                return new PkceParameters(codeChallenge, "S256");
+            } catch (NoSuchAlgorithmException e) {
+                throw new IllegalStateException("SHA-256 algorithm not available", e);
+            }
         }
     }
 
