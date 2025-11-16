@@ -238,7 +238,7 @@ class KeycloakLoginAttributeProviderTest {
                 "state", UUID.randomUUID().toString(),
                 "nonce", UUID.randomUUID().toString()
         ));
-        response = followRedirectIfNeeded(session, response);
+        response = followRedirectsIfNeeded(session, response);
         assertEquals(200, response.statusCode(), "Unable to load login page");
         return LoginForm.parse(response.getBody().asString());
     }
@@ -261,7 +261,7 @@ class KeycloakLoginAttributeProviderTest {
 
     private ResetPasswordForm loadResetPasswordForm(HttpSession session, String url) {
         Response response = session.get(url, Collections.emptyMap());
-        response = followRedirectIfNeeded(session, response);
+        response = followRedirectsIfNeeded(session, response);
         assertEquals(200, response.statusCode(), "Unable to load reset password form");
         return ResetPasswordForm.parse(response.getBody().asString());
     }
@@ -295,16 +295,19 @@ class KeycloakLoginAttributeProviderTest {
         return KEYCLOAK_CONTAINER.getAuthServerUrl() + url;
     }
 
-    private Response followRedirectIfNeeded(HttpSession session, Response response) {
-        if (response == null) {
-            return null;
+    private Response followRedirectsIfNeeded(HttpSession session, Response response) {
+        Response current = response;
+        int redirectCount = 0;
+        while (current != null && isRedirect(current.statusCode())) {
+            String location = current.getHeader("Location");
+            assertNotNull(location, "Redirect response missing Location header");
+            current = session.get(toAbsoluteUrl(location), Collections.emptyMap());
+            redirectCount++;
+            if (redirectCount > 10) {
+                fail("Too many redirects when loading form");
+            }
         }
-        if (!isRedirect(response.statusCode())) {
-            return response;
-        }
-        String location = response.getHeader("Location");
-        assertNotNull(location, "Redirect response missing Location header");
-        return session.get(toAbsoluteUrl(location), Collections.emptyMap());
+        return current;
     }
 
     private boolean isRedirect(int statusCode) {
