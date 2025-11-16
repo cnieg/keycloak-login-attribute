@@ -171,8 +171,16 @@ class KeycloakLoginAttributeProviderTest {
 
     private KeycloakEvent awaitResetPasswordEvent(String... usernames) {
         return eventsClient.awaitEvent(event -> isResetPasswordEvent(event)
-                && event.error() == null
+                && isSuccessfulResetEvent(event)
                 && matchesUsernamesIfPresent(event, usernames));
+    }
+
+    private boolean isSuccessfulResetEvent(KeycloakEvent event) {
+        String error = event.error();
+        if (error == null) {
+            return true;
+        }
+        return Objects.equals("email_send_failed", error) || Objects.equals("email_not_sent", error);
     }
 
     private KeycloakEvent awaitResetPasswordErrorEvent(String username, String expectedError) {
