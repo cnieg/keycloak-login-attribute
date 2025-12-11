@@ -1,0 +1,45 @@
+language: java
+jdk:
+  - openjdk21
+env:
+  global:
+    - mainBranchName=main
+    - semanticReleaseVersion=19.0.5
+    - semanticChangelogVersion=6.0.1
+    - semanticGitVersion=10.0.1
+    - semanticExecVersion=6.0.3
+before_install:
+  - export GPG_TTY=$(tty) && echo -e "$GPG_PRIVATE_KEY" | gpg --batch --import && chmod +x mvnw
+  - pip install --user codecov
+install:
+  - ./mvnw -B -ntp verify 1>&2
+before_cache:
+  - rm -f  $HOME/.m2/repository/**/*-SNAPSHOT.jar
+  - rm -fr $HOME/.m2/repository/com/io7m/jproperties/
+cache:
+  directories:
+    - $HOME/.m2/repository
+    - $HOME/.sonar/cache
+before_deploy:
+  - echo -e "${GPG_SECRET_KEYS}" | base64 --decode | $GPG_EXECUTABLE --import
+  - echo -e "${GPG_OWNERTRUST}" | $GPG_EXECUTABLE --import-ownertrust
+  - echo -e "${GPG_SECRET_KEY_BLOCKS}" | base64 --decode | $GPG_EXECUTABLE --import-keys
+  - export GPG_TTY=$(tty)
+  - ./mvnw -B -ntp clean verify
+  - codecov
+deploy:
+  provider: script
+  script: ./deploy.sh
+  skip_cleanup: true
+  on:
+    tags: true
+notifications:
+  email:
+    recipients:
+      - travis-notifications@io7m.com
+      - j-p.bernabeu@io7m.com
+      - m.schulte@io7m.com
+      - s.schulte@io7m.com
+      - t.schulte@io7m.com
+      - travis-build-reports@io7m.com
+      
