@@ -24,7 +24,7 @@
         <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
         <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
         <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
-        <compiler-maven-plugin.version>3.14.1</compiler-maven-plugin.version>
+        <compiler-maven-plugin.version>3.15.0</compiler-maven-plugin.version>
         <testcontainers-keycloak.version>4.1.1</testcontainers-keycloak.version>
         <rest-assured.version>6.0.0</rest-assured.version>
         <slf4j-simple.version>2.0.17</slf4j-simple.version>
