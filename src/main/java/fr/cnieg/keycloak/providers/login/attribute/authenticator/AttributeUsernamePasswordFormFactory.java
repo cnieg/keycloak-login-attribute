@@ -7,10 +7,14 @@ import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.credential.PasswordCredentialModel;
+import org.keycloak.models.credential.WebAuthnCredentialModel;
 import org.keycloak.provider.ProviderConfigProperty;
+import org.keycloak.authentication.authenticators.browser.WebAuthnConditionalUIAuthenticator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Form factory for Attribute Username Password
@@ -21,10 +25,6 @@ public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactor
      * Provider Id
      */
     public static final String PROVIDER_ID = "attribute-username-password-form";
-    /**
-     * Singleton instance
-     */
-    public static final AttributeUsernamePasswordForm SINGLETON = new AttributeUsernamePasswordForm();
 
     /**
      * @param session keycloak user session
@@ -32,7 +32,7 @@ public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactor
      */
     @Override
     public Authenticator create(KeycloakSession session) {
-        return SINGLETON;
+        return new AttributeUsernamePasswordForm(session);
     }
 
     /**
@@ -73,6 +73,13 @@ public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactor
     @Override
     public String getReferenceCategory() {
         return PasswordCredentialModel.TYPE;
+    }
+
+    @Override
+    public Set<String> getOptionalReferenceCategories(KeycloakSession session) {
+        return WebAuthnConditionalUIAuthenticator.isPasskeysEnabled(session)
+                ? Collections.singleton(WebAuthnCredentialModel.TYPE_PASSWORDLESS)
+                : AuthenticatorFactory.super.getOptionalReferenceCategories(session);
     }
 
     /**
