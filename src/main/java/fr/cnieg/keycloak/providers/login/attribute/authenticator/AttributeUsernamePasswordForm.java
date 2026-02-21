@@ -10,6 +10,7 @@ import org.keycloak.authentication.authenticators.browser.AbstractUsernameFormAu
 import org.keycloak.authentication.authenticators.browser.UsernamePasswordForm;
 import org.keycloak.events.Details;
 import org.keycloak.events.Errors;
+import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.ModelDuplicateException;
 import org.keycloak.models.UserModel;
@@ -40,6 +41,14 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
      * Authorize any password
      */
     public static final String AUTHORIZE_ANY_PASSWORD = "authorize.any.password";
+
+    public AttributeUsernamePasswordForm() {
+        super();
+    }
+
+    public AttributeUsernamePasswordForm(KeycloakSession session) {
+        super(session);
+    }
 
     private UserModel getUserByAttribute(AuthenticationFlowContext context, String userName) {
         return getUserModel(context, userName, ATTRIBUTE_KEY, ATTRIBUTE_REGEX);
