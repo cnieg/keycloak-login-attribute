@@ -14,7 +14,7 @@
     <properties>
         <revision>0.0.0-SNAPSHOT</revision>
         <java.version>21</java.version>
-        <keycloak.version>26.5.3</keycloak.version>
+        <keycloak.version>26.6.0</keycloak.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,7 +25,7 @@
         <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
         <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
         <compiler-maven-plugin.version>3.15.0</compiler-maven-plugin.version>
-        <testcontainers-keycloak.version>4.1.1</testcontainers-keycloak.version>
+        <testcontainers-keycloak.version>4.2.0</testcontainers-keycloak.version>
         <rest-assured.version>6.0.0</rest-assured.version>
         <slf4j-simple.version>2.0.17</slf4j-simple.version>
         <jsoup.version>1.22.1</jsoup.version>
