@@ -57,7 +57,7 @@ jobs:
         run: ./mvnw -B -ntp verify 1>&2
       - name: Semantic Prerelease
         if: env.GITHUB_BRANCH != env.mainBranchName
-        uses: cycjimmy/semantic-release-action@v3
+        uses: cycjimmy/semantic-release-action@v6.0.0
         with:
           semantic_version: ${{ env.semanticReleaseVersion }}
           branches: ${{ env.GITHUB_BRANCH }}
@@ -70,7 +70,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.CR_TOKEN }}
       - name: Semantic Release
         if: env.GITHUB_BRANCH == env.mainBranchName
-        uses: cycjimmy/semantic-release-action@v3
+        uses: cycjimmy/semantic-release-action@v6.0.0
         with:
           semantic_version: ${{ env.semanticReleaseVersion }}
           branches: ${{ env.mainBranchName }}
