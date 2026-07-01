@@ -28,11 +28,9 @@ public final class AttributeUsernameForm extends AttributeUsernamePasswordForm {
     @Override
     public void authenticate(AuthenticationFlowContext context) {
         if (context.getUser() != null) {
-            // We can skip the form when user is re-authenticating. Unless current user has some IDP set, so he can re-authenticate with that IDP
-            if (!this.hasLinkedBrokers(context)) {
-                context.success();
-                return;
-            }
+            // We can skip the form when user is re-authenticating.
+            context.success();
+            return;
         }
         super.authenticate(context);
     }
@@ -61,29 +59,5 @@ public final class AttributeUsernameForm extends AttributeUsernamePasswordForm {
         if (context.getRealm().isLoginWithEmailAllowed())
             return Messages.INVALID_USERNAME_OR_EMAIL;
         return Messages.INVALID_USERNAME;
-    }
-
-    /**
-     * Checks if the context user, if it has been set, is currently linked to any IDPs they could use to authenticate.
-     * If the auth session has an existing IDP in the brokered context, it is filtered out.
-     *
-     * @param context a reference to the {@link AuthenticationFlowContext}
-     * @return {@code true} if the context user has federated IDPs that can be used for authentication; {@code false} otherwise.
-     */
-    private boolean hasLinkedBrokers(AuthenticationFlowContext context) {
-        KeycloakSession session = context.getSession();
-        UserModel user = context.getUser();
-        if (user == null) {
-            return false;
-        }
-        AuthenticationSessionModel authSession = context.getAuthenticationSession();
-        SerializedBrokeredIdentityContext serializedCtx = SerializedBrokeredIdentityContext.readFromAuthenticationSession(authSession, AbstractIdpAuthenticator.BROKERED_CONTEXT_NOTE);
-        final IdentityProviderModel existingIdp = (serializedCtx == null) ? null : serializedCtx.deserialize(session, authSession).getIdpConfig();
-
-        return session.users().getFederatedIdentitiesStream(session.getContext().getRealm(), user)
-                .map(fedIdentity -> session.identityProviders().getByAlias(fedIdentity.getIdentityProvider()))
-                .filter(Objects::nonNull)
-                .anyMatch(idpModel -> existingIdp == null || !Objects.equals(existingIdp.getAlias(), idpModel.getAlias()));
-
     }
 }

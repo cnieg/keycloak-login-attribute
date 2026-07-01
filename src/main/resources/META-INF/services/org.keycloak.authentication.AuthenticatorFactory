@@ -1,3 +1,5 @@
 fr.cnieg.keycloak.providers.login.attribute.authenticator.AttributeUsernamePasswordFormFactory
 fr.cnieg.keycloak.providers.login.attribute.authenticator.AttributeUsernameFormFactory
+fr.cnieg.keycloak.providers.login.attribute.authenticator.AttributeUsernamePasswordOptionalFormFactory
+fr.cnieg.keycloak.providers.login.attribute.authenticator.PasswordOnceFormFactory
 fr.cnieg.keycloak.authenticators.resetcred.ResetCredentialAttributeChooseUser
