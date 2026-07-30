@@ -28,7 +28,7 @@
         <testcontainers-keycloak.version>4.3.1</testcontainers-keycloak.version>
         <rest-assured.version>6.0.1</rest-assured.version>
         <slf4j-simple.version>2.0.18</slf4j-simple.version>
-        <jsoup.version>1.22.2</jsoup.version>
+        <jsoup.version>1.23.1</jsoup.version>
         <testcontainers.version>1.21.4</testcontainers.version>
     </properties>
 
