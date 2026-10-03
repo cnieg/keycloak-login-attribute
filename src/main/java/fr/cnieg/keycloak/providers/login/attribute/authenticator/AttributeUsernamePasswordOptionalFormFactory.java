@@ -17,15 +17,15 @@ import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.authentication.authenticators.browser.WebAuthnConditionalUIAuthenticator;
 
 /**
- * Form factory for Attribute Username Password
+ * Form factory for Attribute Username Password (Optional/Hidden for password managers)
  */
-public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactory {
+public class AttributeUsernamePasswordOptionalFormFactory implements AuthenticatorFactory {
 
-    public static final String PROVIDER_ID = "attribute-username-password-form";
+    public static final String PROVIDER_ID = "attribute-username-password-opt-form";
 
     @Override
     public Authenticator create(KeycloakSession session) {
-        return new AttributeUsernamePasswordForm(session);
+        return new AttributeUsernamePasswordOptionalForm(session);
     }
 
     @Override
@@ -76,12 +76,12 @@ public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactor
 
     @Override
     public String getDisplayType() {
-        return "Attribute Username Password Form";
+        return "Attribute Username Password-Optional Form";
     }
 
     @Override
     public String getHelpText() {
-        return "Validates a username or attribute and password from login form.";
+        return "Validates a username or attribute and optional password from login form.";
     }
 
     @Override
