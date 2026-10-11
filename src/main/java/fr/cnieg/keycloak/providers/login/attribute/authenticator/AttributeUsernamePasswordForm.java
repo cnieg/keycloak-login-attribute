@@ -2,15 +2,13 @@ package fr.cnieg.keycloak.providers.login.attribute.authenticator;
 
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
-import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
-import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.authenticators.browser.AbstractUsernameFormAuthenticator;
 import org.keycloak.authentication.authenticators.browser.UsernamePasswordForm;
 import org.keycloak.events.Details;
 import org.keycloak.events.Errors;
-import org.keycloak.models.AuthenticatorConfigModel;
+import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.ModelDuplicateException;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.utils.KeycloakModelUtils;
@@ -19,15 +17,12 @@ import org.keycloak.services.managers.AuthenticationManager;
 import org.keycloak.services.messages.Messages;
 
 import static fr.cnieg.keycloak.AuthenticatorUserModel.getUserModel;
+import static org.keycloak.services.validation.Validation.FIELD_USERNAME;
 
 /**
  * Attribute username password form
  */
-public class AttributeUsernamePasswordForm extends UsernamePasswordForm implements Authenticator {
-    /**
-     * Logger used by class
-     */
-    protected static final Logger logger = Logger.getLogger(AttributeUsernamePasswordForm.class);
+public class AttributeUsernamePasswordForm extends UsernamePasswordForm {
     /**
      * Attribute key used for check identity
      */
@@ -36,10 +31,14 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
      * Attribute format
      */
     public static final String ATTRIBUTE_REGEX = "login.attribute.regex";
-    /**
-     * Authorize any password
-     */
-    public static final String AUTHORIZE_ANY_PASSWORD = "authorize.any.password";
+
+    public AttributeUsernamePasswordForm() {
+        super();
+    }
+
+    public AttributeUsernamePasswordForm(KeycloakSession session) {
+        super(session);
+    }
 
     private UserModel getUserByAttribute(AuthenticationFlowContext context, String userName) {
         return getUserModel(context, userName, ATTRIBUTE_KEY, ATTRIBUTE_REGEX);
@@ -52,23 +51,9 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
      */
     @Override
     public boolean validateUserAndPassword(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
-        logger.debug("validateUserAndPassword()");
-        context.clearUser();
-        UserModel user = getUserOrAttribute(context, inputData);
-        return user != null &&
-                validateUser(context, user, inputData) &&
-                (validateAnyPassword(context) || validatePassword(context, user, inputData, true));
-    }
-
-    private boolean validateAnyPassword(AuthenticationFlowContext context) {
-        AuthenticatorConfigModel config = context.getAuthenticatorConfig();
-        if (config != null) {
-            if (Boolean.parseBoolean(config.getConfig().get(AUTHORIZE_ANY_PASSWORD))) {
-                logger.warn("Password not validated, use this configuration only for tests purpose");
-                return true;
-            }
-        }
-        return false;
+        UserModel user = getAttributeUser(context, inputData);
+        boolean shouldClearUserFromCtxAfterBadPassword = !isUserAlreadySetBeforeUsernamePasswordAuth(context);
+        return user != null && validatePassword(context, user, inputData, shouldClearUserFromCtxAfterBadPassword) && validateUser(context, user, inputData);
     }
 
     /**
@@ -78,18 +63,16 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
      */
     @Override
     public boolean validateUser(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
-        logger.debug("validateUser()");
-        context.clearUser();
-        UserModel user = getUserOrAttribute(context, inputData);
+        UserModel user = getAttributeUser(context, inputData);
         return user != null && validateUser(context, user, inputData);
     }
 
-    private boolean validateUser(AuthenticationFlowContext context, UserModel user, MultivaluedMap<String, String> inputData) {
+    protected boolean validateUser(AuthenticationFlowContext context, UserModel user, MultivaluedMap<String, String> inputData) {
         if (!enabledUser(context, user)) {
             return false;
         }
         String rememberMe = inputData.getFirst("rememberMe");
-        boolean remember = rememberMe != null && rememberMe.equalsIgnoreCase("on");
+        boolean remember = context.getRealm().isRememberMe() && rememberMe != null && rememberMe.equalsIgnoreCase("on");
         if (remember) {
             context.getAuthenticationSession().setAuthNote(Details.REMEMBER_ME, "true");
             context.getEvent().detail(Details.REMEMBER_ME, "true");
@@ -100,27 +83,39 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
         return true;
     }
 
-    private UserModel getUserOrAttribute(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
+    protected UserModel getAttributeUser(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
+        if (isUserAlreadySetBeforeUsernamePasswordAuth(context)) {
+            // Get user from the authentication context in case he was already set before this authenticator
+            UserModel user = context.getUser();
+            testInvalidUser(context, user);
+            return user;
+        } else {
+            // Normal login. In this case this authenticator is supposed to establish identity of the user from the provided username
+            context.clearUser();
+            return getAttributeUserFromForm(context, inputData);
+        }
+    }
 
-        String userName = inputData.getFirst(AuthenticationManager.FORM_USERNAME);
-        if (userName == null) {
+    protected UserModel getAttributeUserFromForm(AuthenticationFlowContext context, MultivaluedMap<String, String> inputData) {
+        String username = inputData.getFirst(AuthenticationManager.FORM_USERNAME);
+        if (username == null || username.isEmpty()) {
             context.getEvent().error(Errors.USER_NOT_FOUND);
-            Response challengeResponse = challenge(context, getDefaultChallengeMessage(context));
+            Response challengeResponse = challenge(context, getDefaultChallengeMessage(context), FIELD_USERNAME);
             context.failureChallenge(AuthenticationFlowError.INVALID_USER, challengeResponse);
             return null;
         }
 
         // remove leading and trailing whitespace
-        userName = userName.trim();
+        username = username.trim();
 
-        context.getEvent().detail(Details.USERNAME, userName);
-        context.getAuthenticationSession().setAuthNote(AbstractUsernameFormAuthenticator.ATTEMPTED_USERNAME, userName);
+        context.getEvent().detail(Details.USERNAME, username);
+        context.getAuthenticationSession().setAuthNote(AbstractUsernameFormAuthenticator.ATTEMPTED_USERNAME, username);
 
-        UserModel user;
+        UserModel user = null;
         try {
-            user = KeycloakModelUtils.findUserByNameOrEmail(context.getSession(), context.getRealm(), userName);
+            user = KeycloakModelUtils.findUserByNameOrEmail(context.getSession(), context.getRealm(), username);
             if (user == null) {
-                user = this.getUserByAttribute(context, userName);
+                user = this.getUserByAttribute(context, username);
                 if(user != null) {
                     context.getAuthenticationSession().setAuthNote(AbstractUsernameFormAuthenticator.ATTEMPTED_USERNAME, user.getUsername());
                 }
@@ -134,7 +129,7 @@ public class AttributeUsernamePasswordForm extends UsernamePasswordForm implemen
             } else {
                 setDuplicateUserChallenge(context, Errors.USERNAME_IN_USE, Messages.USERNAME_EXISTS, AuthenticationFlowError.INVALID_USER);
             }
-            return null;
+            return user;
         }
 
         testInvalidUser(context, user);
