@@ -1,5 +1,10 @@
 package fr.cnieg.keycloak.providers.login.attribute.authenticator;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import org.keycloak.Config;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
@@ -7,117 +12,81 @@ import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.credential.PasswordCredentialModel;
+import org.keycloak.models.credential.WebAuthnCredentialModel;
 import org.keycloak.provider.ProviderConfigProperty;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.keycloak.authentication.authenticators.browser.WebAuthnConditionalUIAuthenticator;
 
 /**
  * Form factory for Attribute Username Password
  */
 public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactory {
 
-    /**
-     * Provider Id
-     */
     public static final String PROVIDER_ID = "attribute-username-password-form";
-    /**
-     * Singleton instance
-     */
-    public static final AttributeUsernamePasswordForm SINGLETON = new AttributeUsernamePasswordForm();
 
-    /**
-     * @param session keycloak user session
-     * @return authenticator
-     */
     @Override
     public Authenticator create(KeycloakSession session) {
-        return SINGLETON;
+        return new AttributeUsernamePasswordForm(session);
     }
 
-    /**
-     * @param config configuration provider
-     */
     @Override
     public void init(Config.Scope config) {
-        // unused method
+
     }
 
-    /**
-     * @param factory noop
-     */
     @Override
     public void postInit(KeycloakSessionFactory factory) {
-        // unused method
+
     }
 
-    /**
-     * noop
-     */
     @Override
     public void close() {
-        // unused method
+
     }
 
-    /**
-     * @return provider id
-     */
     @Override
     public String getId() {
         return PROVIDER_ID;
     }
 
-    /**
-     * @return Model Type
-     */
     @Override
     public String getReferenceCategory() {
         return PasswordCredentialModel.TYPE;
     }
 
-    /**
-     * @return configurable provider
-     */
+    @Override
+    public Set<String> getOptionalReferenceCategories(KeycloakSession session) {
+        return WebAuthnConditionalUIAuthenticator.isPasskeysEnabled(session)
+                ? Collections.singleton(WebAuthnCredentialModel.TYPE_PASSWORDLESS)
+                : AuthenticatorFactory.super.getOptionalReferenceCategories(session);
+    }
+
     @Override
     public boolean isConfigurable() {
         return true;
     }
 
-    /**
-     * Choices are required
-     */
-    protected static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = { AuthenticationExecutionModel.Requirement.REQUIRED };
+    public static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
+            AuthenticationExecutionModel.Requirement.REQUIRED
+    };
 
-    /**
-     * @return requirements
-     */
     @Override
     public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
         return REQUIREMENT_CHOICES;
     }
 
-    /**
-     * @return no user setup allowed
-     */
-    @Override
-    public boolean isUserSetupAllowed() {
-        return false;
-    }
-
-    /**
-     * @return Form display
-     */
     @Override
     public String getDisplayType() {
         return "Attribute Username Password Form";
     }
 
-    /**
-     * @return Help Text
-     */
     @Override
     public String getHelpText() {
-        return "Validates a username or attribute and password from login form";
+        return "Validates a username or attribute and password from login form.";
+    }
+
+    @Override
+    public boolean isUserSetupAllowed() {
+        return false;
     }
 
     private static final List<ProviderConfigProperty> CONFIG_PROPERTIES = new ArrayList<>();
@@ -135,13 +104,6 @@ public class AttributeUsernamePasswordFormFactory implements AuthenticatorFactor
         providerConfigProperty.setType(ProviderConfigProperty.STRING_TYPE);
         providerConfigProperty.setHelpText("Regular expression for which the search by attribute will be performed");
         providerConfigProperty.setDefaultValue(".*");
-        CONFIG_PROPERTIES.add(providerConfigProperty);
-        providerConfigProperty = new ProviderConfigProperty();
-        providerConfigProperty.setName(AttributeUsernamePasswordForm.AUTHORIZE_ANY_PASSWORD);
-        providerConfigProperty.setLabel("Authorize Any Password");
-        providerConfigProperty.setType(ProviderConfigProperty.BOOLEAN_TYPE);
-        providerConfigProperty.setHelpText("Add ability (only for tests) to accept any password");
-        providerConfigProperty.setDefaultValue(false);
         CONFIG_PROPERTIES.add(providerConfigProperty);
     }
 
