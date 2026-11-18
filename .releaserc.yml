@@ -1,11 +1,17 @@
+
 plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/release-notes-generator"
   - "@semantic-release/changelog"
-  - "@semantic-release/git"
+
+  - - "@semantic-release/git"
+    - assets:
+        - CHANGELOG.md
+
   - - "@semantic-release/exec"
-    - verifyReleaseCmd: "./mvnw -B -ntp verify -Drevision=${nextRelease.version}-SNAPSHOT -Pdeploy 1>&2 "
-      publishCmd: "./mvnw -B -ntp deploy -Drevision=${nextRelease.version} -Pdeploy 1>&2 "
+    - verifyReleaseCmd: "./mvnw -B -ntp verify -Drevision=${nextRelease.version}-SNAPSHOT -Pdeploy 1>&2"
+      publishCmd: "./mvnw -B -ntp deploy -Drevision=${nextRelease.version} -Pdeploy 1>&2"
+
   - - "@semantic-release/github"
     - assets:
         - path:
@@ -14,9 +20,11 @@ plugins:
             - "!./target/*javadoc.jar"
             - "!./target/*sources.jar"
           label: Package
+
         - path:
             - "./target/*javadoc.jar"
           label: Javadoc
+
         - path:
             - "./target/*sources.jar"
           label: Sources
