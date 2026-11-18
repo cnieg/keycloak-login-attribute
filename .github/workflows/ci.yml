@@ -37,7 +37,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '22.14.0'
+          node-version: '26.13.1'
 
       - name: Display Node.js version
         run: |
